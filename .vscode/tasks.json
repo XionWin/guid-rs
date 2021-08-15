@@ -1,0 +1,48 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "cross compile",
+            "command": "echo",
+            "args": [
+                "build copy finished"
+            ],
+            "dependsOn": "copy",
+        },
+        {
+            "type": "shell",
+            "label": "copy",
+            "command": "scp",
+            "args": [
+                "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/app",
+                "pi@192.168.0.202:/home/pi/Documents"
+            ],
+            "dependsOn": "kill"
+        },
+        {
+            "type": "shell",
+            "label": "kill",
+            "command": "ssh",
+            "args": [
+                "-f",
+                "pi@192.168.0.202",
+                "sudo",
+                "killall",
+                "-9",
+                "gdbserver"
+            ],
+            "dependsOn": "build"
+        },
+        {
+            "type": "shell",
+            "label": "build",
+            "command": "cargo",
+            "args": [
+                "build"
+            ]
+        },
+    ]
+}
