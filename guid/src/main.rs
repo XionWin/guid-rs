@@ -1,5 +1,3 @@
-use std::ffi::CStr;
-
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 #[repr(C)]
 pub struct DrmResources {
@@ -19,24 +17,21 @@ pub struct DrmResources {
 
 fn main() {
     unsafe {
-
-        let mut path = "/dev/dri/card1".bytes().collect::<Vec<u8>>();
+        let mut path = "/dev/dri/card1".bytes().collect::<Vec<libc::c_char>>();
         path.push(b'\0');
         let fd = open(path.as_ptr(), 3);
         println!("{}", fd);
-        let ptr_drm = drmModeGetResources(fd as u32);
-        let drm = *ptr_drm;
-        println!("{:?}", drm);
+        let ptr_drm = drmModeGetResources(fd);
+        println!("{:?}", *ptr_drm);
     }
 }
 
 #[link(name = "c")]
 extern "C" {
-    pub fn open(device: *const u8, mode: i32) -> i32;
+    pub fn open(device: *const libc::c_char, mode: libc::c_int) -> libc::c_int;
 }
-
 
 #[link(name = "drm")]
 extern "C" {
-    pub fn drmModeGetResources(fd: u32) -> *const DrmResources;
+    pub fn drmModeGetResources(fd: libc::c_int) -> *const DrmResources;
 }

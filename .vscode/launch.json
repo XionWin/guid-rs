@@ -8,7 +8,7 @@
             "name": "gcc build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/app",
+            "program": "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/guid",
             "args": [""],
             "cwd": "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/",
             "MIMode": "gdb",

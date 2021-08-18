@@ -17,7 +17,7 @@
             "label": "copy",
             "command": "scp",
             "args": [
-                "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/app",
+                "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/guid",
                 "pi@192.168.0.202:/home/pi/Documents"
             ],
             "dependsOn": "kill"
