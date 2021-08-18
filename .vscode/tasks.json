@@ -18,7 +18,7 @@
             "command": "scp",
             "args": [
                 "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/guid",
-                "pi@192.168.0.202:/home/pi/Documents"
+                "pi@192.168.0.205:/home/pi/Documents"
             ],
             "dependsOn": "kill"
         },
@@ -28,7 +28,7 @@
             "command": "ssh",
             "args": [
                 "-f",
-                "pi@192.168.0.202",
+                "pi@192.168.0.205",
                 "sudo",
                 "killall",
                 "-9",

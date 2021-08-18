@@ -7,3 +7,4 @@ edition = "2018"
 
 [dependencies]
 libc={path="../linux/libc"}
+drm={path="../linux/drm"}
