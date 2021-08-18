@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "libc.h": "c",
-        "types.h": "c",
-        "ioctl.h": "c",
-        "features.h": "c",
-        "stubs.h": "c"
-    }
-}

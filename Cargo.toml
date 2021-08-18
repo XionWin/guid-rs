@@ -1,6 +1,4 @@
 [workspace]
 members = [
     "app",
-    "pixel",
-    "nix",
 ]
