@@ -17,19 +17,14 @@ pub struct DrmResources {
 
 fn main() {
     unsafe {
-        let mut path = "/dev/dri/card1".bytes().collect::<Vec<libc::c_char>>();
-        path.push(b'\0');
-        let fd = open(path.as_ptr(), 3);
+        let file = libc::File::new("/dev/dri/card1");
+        let fd = file.get_fd();
         println!("{}", fd);
         let ptr_drm = drmModeGetResources(fd);
         println!("{:?}", *ptr_drm);
     }
 }
 
-#[link(name = "c")]
-extern "C" {
-    pub fn open(device: *const libc::c_char, mode: libc::c_int) -> libc::c_int;
-}
 
 #[link(name = "drm")]
 extern "C" {
