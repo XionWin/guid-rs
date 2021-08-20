@@ -9,9 +9,9 @@ impl Connector {
         }
     }
 
-    pub fn get_mode(&self) -> crate::ffi::ModeInfo {
+    pub fn get_mode(&self) -> super::ModeInfo {
         unsafe {
-            *self.raw.modes
+            super::ModeInfo::new(*self.raw.modes)
         }
     }
 

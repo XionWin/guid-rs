@@ -23,9 +23,8 @@ impl Resources {
                 let mode = connector.get_mode();
                 println!("{:?}", mode);
 
-                let name =  CStr::from_ptr(mode.name.as_ptr());
 
-                println!("{:?}", name);
+                println!("{:?}", mode.get_name());
             }
         }
         Self {

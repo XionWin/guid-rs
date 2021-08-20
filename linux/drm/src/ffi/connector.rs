@@ -13,7 +13,7 @@ pub struct DrmConnector {
     pub subpixel: SubPixel,
 
     pub count_modes: libc::c_int,
-    pub modes: *const ModeInfo,
+    pub modes: *const DrmModeInfo,
 
     pub count_props: libc::c_int,
     pub props: *const libc::c_uint,
@@ -26,7 +26,7 @@ pub struct DrmConnector {
 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 #[repr(C)]
-pub struct ModeInfo {
+pub struct DrmModeInfo {
     pub clock: libc::c_uint,
 
     pub hdisplay: libc::c_ushort,
