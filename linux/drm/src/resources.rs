@@ -15,9 +15,10 @@ impl Resources {
                 let connector = *crate::ffi::drmModeGetConnector(fd, *connector_id);
 
                 let connector = crate::connector::Connector::new(connector);
+                println!("[connector]: {:}", connector);
 
                 let mode = connector.get_mode();
-                println!("{:?}", mode);
+                println!("{:}", mode);
 
                 println!("{:?}", mode.get_name());
             })

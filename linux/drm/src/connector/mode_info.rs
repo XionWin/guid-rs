@@ -1,4 +1,4 @@
-use std::ffi::CStr;
+use std::{ffi::CStr, fmt};
 
 #[derive(Debug)]
 pub struct ModeInfo {
@@ -18,5 +18,11 @@ impl ModeInfo {
         }
         
     }
+}
 
+
+impl fmt::Display for ModeInfo {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{{{:?}: {:?}}}", stringify!(name), self.get_name())
+    }
 }
