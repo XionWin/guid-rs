@@ -1,36 +1,29 @@
-use std::{ffi::{CStr}, os::unix::prelude::RawFd};
+use std::os::unix::prelude::RawFd;
 
-
-pub struct Resources {
-    
-}
+pub struct Resources {}
 
 impl Resources {
     pub fn new(fd: RawFd) -> Self {
-        let ptr_drm = unsafe {
-            *crate::ffi::drmModeGetResources(fd)
-        };
+        let ptr_drm = unsafe { *crate::ffi::drmModeGetResources(fd) };
         println!("{:?}", ptr_drm);
 
-        unsafe {
-            let connectors = std::slice::from_raw_parts(ptr_drm.connectors, ptr_drm.count_connectors as usize);
-            for connector in connectors {
-                println!("connector id: {:?}", connector);
-                let connector = *crate::ffi::drmModeGetConnector(fd, *connector);
+        foreach_ptr!(
+            ptr_drm.connectors,
+            ptr_drm.count_connectors as usize,
+            (|connector_id: &u32| {
+                println!("{:?}", connector_id);
+                let connector = *crate::ffi::drmModeGetConnector(fd, *connector_id);
 
                 let connector = crate::connector::Connector::new(connector);
 
                 let mode = connector.get_mode();
                 println!("{:?}", mode);
 
-
                 println!("{:?}", mode.get_name());
-            }
-        }
-        Self {
-        }
+            })
+        );
+        Self {}
     }
 
-    pub fn get_resources(&self) {
-    }
+    pub fn get_resources(&self) {}
 }

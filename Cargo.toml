@@ -2,5 +2,6 @@
 members = [
     "guid",
     "linux/drm",
+    "linux/utils",
     "linux/libc",
 ]
