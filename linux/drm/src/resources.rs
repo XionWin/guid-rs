@@ -1,4 +1,4 @@
-use std::{ffi::{CStr, CString}, os::unix::prelude::RawFd};
+use std::{ffi::{CStr}, os::unix::prelude::RawFd};
 
 
 pub struct Resources {
@@ -12,19 +12,20 @@ impl Resources {
         };
         println!("{:?}", ptr_drm);
 
-        for _connector_id in 0..ptr_drm.count_connectors {
-            unsafe {
-                let connector = *crate::ffi::drmModeGetConnector(fd, *ptr_drm.connectors);
-                println!("{:?}", connector);
+        unsafe {
+            let connectors = std::slice::from_raw_parts(ptr_drm.connectors, ptr_drm.count_connectors as usize);
+            for connector in connectors {
+                println!("connector id: {:?}", connector);
+                let connector = *crate::ffi::drmModeGetConnector(fd, *connector);
 
-                let mode = *connector.modes;
+                let connector = crate::connector::Connector::new(connector);
+
+                let mode = connector.get_mode();
                 println!("{:?}", mode);
 
-                let name =  CStr::from_ptr(&mode.name[0]);
+                let name =  CStr::from_ptr(mode.name.as_ptr());
 
-                
                 println!("{:?}", name);
-                
             }
         }
         Self {
