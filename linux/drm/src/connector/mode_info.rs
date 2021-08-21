@@ -9,6 +9,7 @@ pub struct ModeInfo {
     hsync_end: libc::c_ushort,
     htotal: libc::c_ushort,
     hskew: libc::c_ushort,
+    
     vdisplay: libc::c_ushort,
     vsync_start: libc::c_ushort,
     vsync_end: libc::c_ushort,

@@ -8,6 +8,7 @@ pub struct DrmConnector {
     pub connector_type: ConnectorType,
     pub connector_type_id: libc::c_uint,
     pub connection: ConnectionStatus,
+    
     pub mm_width: libc::c_uint,
     pub mm_height: libc::c_uint,
     pub subpixel: SubPixel,

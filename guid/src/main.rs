@@ -3,7 +3,7 @@
 fn main() {
     let file = libc::File::new("/dev/dri/card1");
     let fd = file.get_fd();
-    println!("{}", fd);
+    println!("{:}: {}", file.get_path(), fd);
     let resources = drm::Resources::new(fd);
     println!("{:#?}", resources);
 }

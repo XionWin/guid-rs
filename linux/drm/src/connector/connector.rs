@@ -7,8 +7,10 @@ pub struct Connector {
     connector_type: super::define::ConnectorType,
     connector_type_id: libc::c_uint,
     connection: super::define::ConnectionStatus,
+
     mm_width: libc::c_uint,
     mm_height: libc::c_uint,
+    
     subpixel: super::define::SubPixel,
 
     modes: Vec<ModeInfo>,
