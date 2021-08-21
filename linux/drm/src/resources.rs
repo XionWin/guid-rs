@@ -14,7 +14,6 @@ impl Resources {
             connectors: get_connectors(fd, &ptr_drm),
         }
     }
-
 }
 
 pub fn get_connectors(fd: RawFd, r: &crate::ffi::DrmResources) -> Vec<super::Connector> {
