@@ -1,4 +1,4 @@
-use std::os::unix::prelude::RawFd;
+use std::{os::unix::prelude::RawFd};
 
 use crate::Connector;
 

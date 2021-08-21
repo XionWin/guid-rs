@@ -5,6 +5,6 @@ fn main() {
     let fd = file.get_fd();
     println!("{}", fd);
     let resources = drm::Resources::new(fd);
-    println!("{:?}", resources);
+    println!("{:#?}", resources);
 }
 
