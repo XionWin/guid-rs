@@ -43,7 +43,7 @@ pub struct DrmModeInfo {
     pub vrefresh: libc::c_int,
 
     pub flags: libc::c_uint,
-    pub type_: DrmModeType,
+    pub mode_type: DrmModeType,
     pub name: [libc::c_char; 32usize],
 }
 
