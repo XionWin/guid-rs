@@ -11,9 +11,6 @@ pub struct Resources {
     // pub crtcs: *const libc::c_uint,
 
     connectors: Vec<Connector>,
-
-    // pub count_encoders: libc::c_int,
-    // pub encoders: *const libc::c_uint,
     
     encoders: Vec<Encoder>,
 
@@ -26,6 +23,15 @@ pub struct Resources {
 impl Resources {
     pub fn new(fd: RawFd) -> Self {
         let r = unsafe { *crate::ffi::drmModeGetResources(fd) };
+
+        // to do!
+        unsafe {
+            let r = std::slice::from_raw_parts(r.crtcs, r.count_crtcs as usize).iter().map(|x| {
+                *crate::ffi::drmModeGetCrtc(fd, *x)
+            }).collect::<Vec<super::ffi::DrmCrtc>>();
+            println!("{:?}", r);
+        }
+
         Self {
             connectors: get_connectors(fd, &r),
             encoders: get_encoders(fd, &r),
