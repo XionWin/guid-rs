@@ -41,13 +41,7 @@ impl Connector {
 }
 
 pub fn get_modes(c: &crate::ffi::DrmConnector) -> Vec<super::ModeInfo> {
-    let mut result = Vec::<super::ModeInfo>::new();
-    foreach_ptr!(
-        c.modes,
-        c.count_modes as usize,
-        (|mode: *const crate::ffi::DrmModeInfo| {
-            result.push(super::ModeInfo::new(*mode));
-        })
-    );
-    result
+    unsafe {std::slice::from_raw_parts(c.modes, c.count_modes as usize)}.iter().map(|x| {
+        super::ModeInfo::new(*x)
+    }).collect::<Vec<super::ModeInfo>>()
 }

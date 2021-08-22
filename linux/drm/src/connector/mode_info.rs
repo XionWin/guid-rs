@@ -45,9 +45,6 @@ impl ModeInfo {
 }
 
 fn get_name(mi: &crate::ffi::DrmModeInfo) -> String {
-    unsafe {
-        String::from(CStr::from_ptr(mi.name.as_ptr()).to_str().unwrap())
-    }
-    
+    String::from(unsafe {CStr::from_ptr(mi.name.as_ptr())}.to_str().unwrap())
 }
 
