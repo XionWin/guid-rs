@@ -1,6 +1,6 @@
 use std::{os::unix::prelude::RawFd};
 
-use crate::Connector;
+use crate::{Connector, Encoder};
 
 #[derive(Debug)]
 pub struct Resources {
@@ -14,6 +14,8 @@ pub struct Resources {
 
     // pub count_encoders: libc::c_int,
     // pub encoders: *const libc::c_uint,
+    
+    encoders: Vec<Encoder>,
 
     min_width: libc::c_uint,
     max_width: libc::c_uint,
@@ -26,6 +28,7 @@ impl Resources {
         let r = unsafe { *crate::ffi::drmModeGetResources(fd) };
         Self {
             connectors: get_connectors(fd, &r),
+            encoders: get_encoders(fd, &r),
             min_width: r.min_width,
             max_width: r.max_width,
             min_height: r.min_height,
@@ -35,7 +38,17 @@ impl Resources {
 }
 
 pub fn get_connectors(fd: RawFd, r: &crate::ffi::DrmResources) -> Vec<super::Connector> {
-    unsafe {std::slice::from_raw_parts(r.connectors, r.count_connectors as usize)}.iter().map(|x| {
-        super::Connector::new(unsafe {*crate::ffi::drmModeGetConnector(fd, *x)})
-    }).collect::<Vec<super::Connector>>()
+    unsafe {
+        std::slice::from_raw_parts(r.connectors, r.count_connectors as usize).iter().map(|x| {
+            super::Connector::new(*crate::ffi::drmModeGetConnector(fd, *x))
+        }).collect::<Vec<super::Connector>>()
+    }
+}
+
+pub fn get_encoders(fd: RawFd, r: &crate::ffi::DrmResources) -> Vec<super::Encoder> {
+    unsafe {
+        std::slice::from_raw_parts(r.encoders, r.count_encoders as usize).iter().map(|x| {
+            super::Encoder::new(*crate::ffi::drmModeGetEncoder(fd, *x))
+        }).collect::<Vec<super::Encoder>>()
+    }
 }
