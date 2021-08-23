@@ -2,6 +2,9 @@ use crate::ModeInfo;
 
 #[derive(Debug)]
 pub struct Connector {
+    #[allow(dead_code)]
+    #[doc(hidden)]
+    raw: crate::ffi::DrmConnector,
     connector_id: libc::c_uint,
     encoder_id: libc::c_uint,
     connector_type: super::define::ConnectorType,
@@ -26,6 +29,7 @@ pub struct Connector {
 impl Connector {
     pub fn new(c: crate::ffi::DrmConnector) -> Self {
         Self {
+            raw: c,
             connector_id : c.connector_id,
             encoder_id : c.encoder_id,
             connector_type : c.connector_type,

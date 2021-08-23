@@ -2,6 +2,10 @@ use std::{ffi::CStr};
 
 #[derive(Debug)]
 pub struct ModeInfo {
+    #[allow(dead_code)]
+    #[doc(hidden)]
+    raw: crate::ffi::DrmModeInfo,
+
     clock: libc::c_uint,
 
     hdisplay: libc::c_ushort,
@@ -25,6 +29,7 @@ pub struct ModeInfo {
 impl ModeInfo {
     pub fn new(mi: crate::ffi::DrmModeInfo) -> Self {
         Self {
+            raw: mi,
             clock: mi.clock,
             hdisplay: mi.hdisplay,
             hsync_start: mi.hsync_start,
