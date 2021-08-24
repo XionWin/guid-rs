@@ -1,17 +1,15 @@
-use crate::connector::*;
-
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 #[repr(C)]
 pub struct DrmConnector {
     pub connector_id: libc::c_uint,
     pub encoder_id: libc::c_uint,
-    pub connector_type: ConnectorType,
+    pub connector_type: crate::connector::ConnectorType,
     pub connector_type_id: libc::c_uint,
-    pub connection: ConnectionStatus,
+    pub connection: crate::connector::ConnectionStatus,
     
     pub mm_width: libc::c_uint,
     pub mm_height: libc::c_uint,
-    pub subpixel: SubPixel,
+    pub subpixel: crate::connector::SubPixel,
 
     pub count_modes: libc::c_int,
     pub modes: *const DrmModeInfo,
@@ -44,7 +42,7 @@ pub struct DrmModeInfo {
     pub vrefresh: libc::c_int,
 
     pub flags: libc::c_uint,
-    pub mode_type: DrmModeType,
+    pub mode_type: crate::common::DrmModeType,
     pub name: [libc::c_char; 32usize],
 }
 

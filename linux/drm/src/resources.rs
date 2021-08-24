@@ -1,14 +1,14 @@
 use std::{os::unix::prelude::RawFd};
 
-use crate::{Connector, Encoder};
+use crate::{Connector, Crtc, Encoder};
 
 #[derive(Debug)]
 pub struct Resources {
+    ptr: *const crate::ffi::DrmResources,
     // pub count_fbs: libc::c_int,
     // pub fbs: *const libc::c_uint,
-    
-    // pub count_crtcs: libc::c_int,
-    // pub crtcs: *const libc::c_uint,
+
+    crtcs: Vec<Crtc>,
 
     connectors: Vec<Connector>,
     
@@ -24,15 +24,9 @@ impl Resources {
     pub fn new(fd: RawFd) -> Self {
         let r = unsafe { *crate::ffi::drmModeGetResources(fd) };
 
-        // to do!
-        unsafe {
-            let r = std::slice::from_raw_parts(r.crtcs, r.count_crtcs as usize).iter().map(|x| {
-                *crate::ffi::drmModeGetCrtc(fd, *x)
-            }).collect::<Vec<super::ffi::DrmCrtc>>();
-            println!("{:?}", r);
-        }
-
         Self {
+            ptr: &r as *const crate::ffi::DrmResources,
+            crtcs: get_crtcs(fd, &r),
             connectors: get_connectors(fd, &r),
             encoders: get_encoders(fd, &r),
             min_width: r.min_width,
@@ -40,6 +34,14 @@ impl Resources {
             min_height: r.min_height,
             max_height: r.max_height,
         }
+    }
+}
+
+pub fn get_crtcs(fd: RawFd, r: &crate::ffi::DrmResources) -> Vec<super::Crtc> {
+    unsafe {
+        std::slice::from_raw_parts(r.crtcs, r.count_crtcs as usize).iter().map(|x| {
+            super::Crtc::new( *crate::ffi::drmModeGetCrtc(fd, *x))
+        }).collect::<Vec<super::Crtc>>()
     }
 }
 
