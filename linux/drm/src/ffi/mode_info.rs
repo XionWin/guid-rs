@@ -1,3 +1,4 @@
+#[derive(Debug)]
 #[repr(C)]
 pub struct DrmModeInfo {
     pub clock: libc::c_uint,

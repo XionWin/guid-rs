@@ -1,3 +1,4 @@
+#[derive(Debug)]
 #[repr(C)]
 pub struct DrmConnector {
     pub connector_id: libc::c_uint,

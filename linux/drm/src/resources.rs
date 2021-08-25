@@ -26,7 +26,7 @@ impl Resources {
         let r = unsafe {
             ptr.as_ref().unwrap()
         };
-        println!("{:#?}", r);
+        
         Self {
             ptr,
             fbs: get_fbs(fd, r),
