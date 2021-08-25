@@ -1,12 +1,12 @@
 use std::{os::unix::prelude::RawFd};
 
-use crate::{Connector, Crtc, Encoder};
+use crate::{Connector, Crtc, Encoder, Framebuffer};
 
 #[derive(Debug)]
 pub struct Resources {
     ptr: *const crate::ffi::DrmResources,
-    // pub count_fbs: libc::c_int,
-    // pub fbs: *const libc::c_uint,
+    
+    fbs: Vec<Framebuffer>,
 
     crtcs: Vec<Crtc>,
 
@@ -26,6 +26,7 @@ impl Resources {
 
         Self {
             ptr: &r as *const crate::ffi::DrmResources,
+            fbs: get_fbs(fd, &r),
             crtcs: get_crtcs(fd, &r),
             connectors: get_connectors(fd, &r),
             encoders: get_encoders(fd, &r),
@@ -34,6 +35,13 @@ impl Resources {
             min_height: r.min_height,
             max_height: r.max_height,
         }
+    }
+}
+pub fn get_fbs(fd: RawFd, r: &crate::ffi::DrmResources) -> Vec<super::Framebuffer> {
+    unsafe {
+        std::slice::from_raw_parts(r.fbs, r.count_fbs as usize).iter().map(|x| {
+            super::Framebuffer::new( *crate::ffi::drmModeGetFB(fd, *x))
+        }).collect::<Vec<super::Framebuffer>>()
     }
 }
 
