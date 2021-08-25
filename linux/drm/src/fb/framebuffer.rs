@@ -13,9 +13,9 @@ pub struct Framebuffer
 }
 
 impl Framebuffer {
-    pub fn new(fb: crate::ffi::DrmFramebuffer) -> Self {
+    pub fn new(fb: &crate::ffi::DrmFramebuffer) -> Self {
         Self {
-            ptr: &fb as *const crate::ffi::DrmFramebuffer,
+            ptr: fb as *const crate::ffi::DrmFramebuffer,
             fb_id: fb.fb_id,
             width: fb.width,
             height: fb.height,

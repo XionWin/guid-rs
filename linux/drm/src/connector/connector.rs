@@ -25,9 +25,9 @@ pub struct Connector {
 }
 
 impl Connector {
-    pub fn new(c: crate::ffi::DrmConnector) -> Self {
+    pub fn new(c: &crate::ffi::DrmConnector) -> Self {
         Self {
-            ptr: &c as *const crate::ffi::DrmConnector,
+            ptr: c as *const crate::ffi::DrmConnector,
             connector_id : c.connector_id,
             encoder_id : c.encoder_id,
             connector_type : c.connector_type,
@@ -37,13 +37,13 @@ impl Connector {
             mm_height : c.mm_height,
             subpixel : c.subpixel,
             
-            modes : get_modes(&c)
+            modes : get_modes(c)
         }
     }
 }
 
 pub fn get_modes(c: &crate::ffi::DrmConnector) -> Vec<crate::common::ModeInfo> {
     unsafe {std::slice::from_raw_parts(c.modes, c.count_modes as usize)}.iter().map(|x| {
-        crate::common::ModeInfo::new(*x)
+        crate::common::ModeInfo::new(x)
     }).collect::<Vec<crate::common::ModeInfo>>()
 }

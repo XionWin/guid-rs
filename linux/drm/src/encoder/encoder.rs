@@ -9,9 +9,9 @@ pub struct Encoder {
 }
 
 impl Encoder {
-    pub fn new(e: crate::ffi::DrmEncoder) -> Self {
+    pub fn new(e: &crate::ffi::DrmEncoder) -> Self {
         Self {
-            ptr: &e as *const crate::ffi::DrmEncoder,
+            ptr: e as *const crate::ffi::DrmEncoder,
             encoder_id: e.encoder_id,
             encoder_type: e.encoder_type,
             crtc_id: e.crtc_id,

@@ -24,9 +24,9 @@ pub struct ModeInfo {
 }
 
 impl ModeInfo {
-    pub fn new(mi: crate::ffi::DrmModeInfo) -> Self {
+    pub fn new(mi: &crate::ffi::DrmModeInfo) -> Self {
         Self {
-            ptr: &mi as *const crate::ffi::DrmModeInfo,
+            ptr: mi as *const crate::ffi::DrmModeInfo,
             clock: mi.clock,
             hdisplay: mi.hdisplay,
             hsync_start: mi.hsync_start,
@@ -41,7 +41,7 @@ impl ModeInfo {
             vrefresh: mi.vrefresh,
             flags: mi.flags,
             mode_type: mi.mode_type,
-            name: get_name(&mi),
+            name: get_name(mi),
         }
     }
 }

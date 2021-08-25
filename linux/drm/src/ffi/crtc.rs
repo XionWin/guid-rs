@@ -1,4 +1,4 @@
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+// #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 #[repr(C)]
 pub struct DrmCrtc
 {
@@ -13,7 +13,7 @@ pub struct DrmCrtc
 
     pub mode_valid: libc::c_int,
 
-    pub mode: super::DrmModeInfo,
+    pub mode: super::mode_info::DrmModeInfo,
 
     pub gamma_size: libc::c_int
 }

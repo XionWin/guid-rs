@@ -1,4 +1,3 @@
-
 #[derive(Debug)]
 pub struct Crtc
 {
@@ -20,9 +19,9 @@ pub struct Crtc
 }
 
 impl Crtc {
-    pub fn new(c: crate::ffi::DrmCrtc) -> Self {
+    pub fn new(c: &crate::ffi::DrmCrtc) -> Self {
         Self {
-            ptr: &c as *const crate::ffi::DrmCrtc,
+            ptr: c as *const crate::ffi::DrmCrtc,
             crtc_id : c.crtc_id,
             buffer_id : c.buffer_id,
             x : c.x,
@@ -30,12 +29,12 @@ impl Crtc {
             width : c.width,
             height : c.height,
             mode_valid : c.mode_valid,
-            mode : get_mode(&c),
+            mode : get_mode(c),
             gamma_size : c.gamma_size
         }
     }
 }
 
 pub fn get_mode(c: &crate::ffi::DrmCrtc) -> crate::common::ModeInfo {
-    crate::common::ModeInfo::new(*&c.mode)
+    crate::common::ModeInfo::new(&c.mode)
 }

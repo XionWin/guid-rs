@@ -1,4 +1,3 @@
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 #[repr(C)]
 pub struct DrmFramebuffer
 {

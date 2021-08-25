@@ -1,4 +1,4 @@
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Debug)]
 #[repr(C)]
 pub struct DrmResources {
     pub count_fbs: libc::c_int,
