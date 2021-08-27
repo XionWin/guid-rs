@@ -35,6 +35,6 @@ impl Crtc {
     }
 }
 
-pub fn get_mode(c: &crate::ffi::DrmCrtc) -> crate::common::ModeInfo {
+fn get_mode(c: &crate::ffi::DrmCrtc) -> crate::common::ModeInfo {
     crate::common::ModeInfo::new(&c.mode)
 }

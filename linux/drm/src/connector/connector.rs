@@ -42,7 +42,7 @@ impl Connector {
     }
 }
 
-pub fn get_modes(c: &crate::ffi::DrmConnector) -> Vec<crate::common::ModeInfo> {
+fn get_modes(c: &crate::ffi::DrmConnector) -> Vec<crate::common::ModeInfo> {
     unsafe {std::slice::from_raw_parts(c.modes, c.count_modes as usize)}.iter().map(|x| {
         crate::common::ModeInfo::new(x)
     }).collect::<Vec<crate::common::ModeInfo>>()

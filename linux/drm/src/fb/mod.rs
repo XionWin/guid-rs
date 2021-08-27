@@ -1,5 +1,5 @@
 mod define;
-mod framebuffer;
+mod fb;
 
 pub use define::*;
-pub use framebuffer::*;
+pub use fb::*;
