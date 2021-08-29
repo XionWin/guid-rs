@@ -23,9 +23,7 @@ pub struct Resources {
 impl Resources {
     pub fn new(fd: RawFd) -> Self {
         let ptr = unsafe { crate::ffi::drmModeGetResources(fd) };
-        let r = unsafe {
-            ptr.as_ref().unwrap()
-        };
+        let r = unsafe { ptr.as_ref().unwrap() };
         
         Self {
             ptr,
@@ -40,6 +38,14 @@ impl Resources {
         }
     }
 }
+
+
+impl Drop for Resources {
+    fn drop(&mut self) {
+        println!("Resources droped");
+    }
+}
+
 
 fn get_fbs(fd: RawFd, r: &crate::ffi::DrmResources) -> Vec<super::Framebuffer> {
     unsafe {

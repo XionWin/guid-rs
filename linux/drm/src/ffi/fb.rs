@@ -15,4 +15,6 @@ pub struct DrmFramebuffer
 #[link(name = "drm")]
 extern "C" {
     pub fn drmModeGetFB(fd: libc::c_int, fb_id: libc::c_uint) -> *const DrmFramebuffer;
+
+    pub fn drmModeFreeFB(ptr: *const DrmFramebuffer);
 }

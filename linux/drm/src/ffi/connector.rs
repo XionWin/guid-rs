@@ -25,4 +25,5 @@ pub struct DrmConnector {
 #[link(name = "drm")]
 extern "C" {
     pub fn drmModeGetConnector(fd: libc::c_int, connector_id: libc::c_uint) -> *const DrmConnector;
+    pub fn drmModeFreeConnector(ptr: *const DrmConnector);
 }

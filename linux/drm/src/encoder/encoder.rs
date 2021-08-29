@@ -20,3 +20,12 @@ impl Encoder {
         }
     }
 }
+
+impl Drop for Encoder {
+    fn drop(&mut self) {
+        unsafe {
+            crate::ffi::drmModeFreeEncoder(self.ptr);
+            println!("Encoder: {:?} droped", self.encoder_id);
+        }
+    }
+}

@@ -42,6 +42,15 @@ impl Connector {
     }
 }
 
+impl Drop for Connector {
+    fn drop(&mut self) {
+        unsafe {
+            crate::ffi::drmModeFreeConnector(self.ptr);
+            println!("Connector: {:?} droped", self.connector_id);
+        }
+    }
+}
+
 fn get_modes(c: &crate::ffi::DrmConnector) -> Vec<crate::common::ModeInfo> {
     unsafe {std::slice::from_raw_parts(c.modes, c.count_modes as usize)}.iter().map(|x| {
         crate::common::ModeInfo::new(x)

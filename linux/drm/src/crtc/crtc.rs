@@ -35,6 +35,15 @@ impl Crtc {
     }
 }
 
+impl Drop for Crtc {
+    fn drop(&mut self) {
+        unsafe {
+            crate::ffi::drmModeFreeCrtc(self.ptr);
+            println!("Crtc: {:?} droped", self.crtc_id);
+        }
+    }
+}
+
 fn get_mode(c: &crate::ffi::DrmCrtc) -> crate::common::ModeInfo {
     crate::common::ModeInfo::new(&c.mode)
 }

@@ -26,3 +26,12 @@ impl Framebuffer {
         }
     }
 }
+
+impl Drop for Framebuffer {
+    fn drop(&mut self) {
+        unsafe {
+            crate::ffi::drmModeFreeFB(self.ptr);
+            println!("Framebuffer: {:?} droped", self.fb_id);
+        }
+    }
+}
