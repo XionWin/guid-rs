@@ -4,6 +4,11 @@ fn main() {
     println!("{:}: {}", file.get_path(), fd);
     let resources = drm::Resources::new(fd);
     println!("{:#?}", resources);
+
+    unsafe {
+        let r = gbm::gbm_create_device(fd);
+        println!("{:#?}", r);
+    }
 }
 
 
