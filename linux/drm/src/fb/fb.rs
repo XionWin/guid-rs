@@ -1,7 +1,7 @@
 #[derive(Debug)]
 pub struct Framebuffer
 {
-    ptr: *const crate::ffi::DrmFramebuffer,
+    handle: *const crate::ffi::DrmFramebuffer,
     fb_id: libc::c_uint,
     width: libc::c_uint,
     height: libc::c_uint,
@@ -9,20 +9,20 @@ pub struct Framebuffer
     bpp: libc::c_uint,
     depth: libc::c_uint,
     /* driver specific handle */
-    handle: libc::c_uint,
+    handle_: libc::c_uint,
 }
 
 impl Framebuffer {
     pub fn new(fb: &crate::ffi::DrmFramebuffer) -> Self {
         Self {
-            ptr: fb as *const crate::ffi::DrmFramebuffer,
+            handle: fb as *const crate::ffi::DrmFramebuffer,
             fb_id: fb.fb_id,
             width: fb.width,
             height: fb.height,
             pitch: fb.pitch,
             bpp: fb.bpp,
             depth: fb.depth,
-            handle: fb.handle,
+            handle_: fb.handle,
         }
     }
 }
@@ -30,8 +30,8 @@ impl Framebuffer {
 impl Drop for Framebuffer {
     fn drop(&mut self) {
         unsafe {
-            crate::ffi::drmModeFreeFB(self.ptr);
-            println!("Framebuffer: {:?} droped", self.fb_id);
+            crate::ffi::drmModeFreeFB(self.handle);
+            println!("Framebuffer: {:?} droped", self.handle);
         }
     }
 }

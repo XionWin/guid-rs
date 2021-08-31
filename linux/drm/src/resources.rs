@@ -4,7 +4,7 @@ use crate::{Connector, Crtc, Encoder, Framebuffer};
 
 #[derive(Debug)]
 pub struct Resources {
-    ptr: *const crate::ffi::DrmResources,
+    handle: *const crate::ffi::DrmResources,
     
     fbs: Vec<Framebuffer>,
 
@@ -22,11 +22,11 @@ pub struct Resources {
 
 impl Resources {
     pub fn new(fd: RawFd) -> Self {
-        let ptr = unsafe { crate::ffi::drmModeGetResources(fd) };
-        let r = unsafe { ptr.as_ref().unwrap() };
+        let handle = unsafe { crate::ffi::drmModeGetResources(fd) };
+        let r = unsafe { handle.as_ref().unwrap() };
         
         Self {
-            ptr,
+            handle,
             fbs: get_fbs(fd, r),
             crtcs: get_crtcs(fd, r),
             connectors: get_connectors(fd, r),
@@ -42,7 +42,7 @@ impl Resources {
 
 impl Drop for Resources {
     fn drop(&mut self) {
-        println!("Resources droped");
+        println!("Resources: {:?} droped", self.handle);
     }
 }
 

@@ -12,5 +12,5 @@ pub struct DrmEncoder
 #[link(name = "drm")]
 extern "C" {
     pub fn drmModeGetEncoder(fd: libc::c_int, encoder_id: libc::c_uint) -> *const DrmEncoder;
-    pub fn drmModeFreeEncoder(ptr: *const DrmEncoder);
+    pub fn drmModeFreeEncoder(handle: *const DrmEncoder);
 }

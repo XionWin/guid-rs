@@ -2,7 +2,7 @@ use crate::ModeInfo;
 
 #[derive(Debug)]
 pub struct Connector {
-    ptr: *const crate::ffi::DrmConnector,
+    handle: *const crate::ffi::DrmConnector,
     connector_id: libc::c_uint,
     encoder_id: libc::c_uint,
     connector_type: super::define::ConnectorType,
@@ -27,7 +27,7 @@ pub struct Connector {
 impl Connector {
     pub fn new(c: &crate::ffi::DrmConnector) -> Self {
         Self {
-            ptr: c as *const crate::ffi::DrmConnector,
+            handle: c as *const crate::ffi::DrmConnector,
             connector_id : c.connector_id,
             encoder_id : c.encoder_id,
             connector_type : c.connector_type,
@@ -45,8 +45,8 @@ impl Connector {
 impl Drop for Connector {
     fn drop(&mut self) {
         unsafe {
-            crate::ffi::drmModeFreeConnector(self.ptr);
-            println!("Connector: {:?} droped", self.connector_id);
+            crate::ffi::drmModeFreeConnector(self.handle);
+            println!("Connector: {:?} droped", self.handle);
         }
     }
 }

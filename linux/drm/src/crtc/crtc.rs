@@ -1,7 +1,7 @@
 #[derive(Debug)]
 pub struct Crtc
 {
-    ptr: *const crate::ffi::DrmCrtc,
+    handle: *const crate::ffi::DrmCrtc,
     crtc_id: libc::c_uint,
     buffer_id: libc::c_uint,
 
@@ -21,7 +21,7 @@ pub struct Crtc
 impl Crtc {
     pub fn new(c: &crate::ffi::DrmCrtc) -> Self {
         Self {
-            ptr: c as *const crate::ffi::DrmCrtc,
+            handle: c as *const crate::ffi::DrmCrtc,
             crtc_id : c.crtc_id,
             buffer_id : c.buffer_id,
             x : c.x,
@@ -38,8 +38,8 @@ impl Crtc {
 impl Drop for Crtc {
     fn drop(&mut self) {
         unsafe {
-            crate::ffi::drmModeFreeCrtc(self.ptr);
-            println!("Crtc: {:?} droped", self.crtc_id);
+            crate::ffi::drmModeFreeCrtc(self.handle);
+            println!("Crtc: {:?} droped", self.handle);
         }
     }
 }

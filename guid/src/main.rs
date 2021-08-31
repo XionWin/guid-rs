@@ -5,10 +5,8 @@ fn main() {
     let resources = drm::Resources::new(fd);
     println!("{:#?}", resources);
 
-    unsafe {
-        let r = gbm::gbm_create_device(fd);
-        println!("{:#?}", r);
-    }
+    let r = gbm::Device::new(fd);
+    println!("{:#?}", r);
 }
 
 
