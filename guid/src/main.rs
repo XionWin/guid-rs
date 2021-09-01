@@ -7,6 +7,8 @@ fn main() {
 
     let r = gbm::Device::new(fd);
     println!("{:#?}", r);
+    let r = gbm::BufferObject::new(&r);
+    println!("{:#?}", r);
 }
 
 

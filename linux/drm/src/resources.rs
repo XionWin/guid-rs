@@ -46,7 +46,6 @@ impl Drop for Resources {
     }
 }
 
-
 fn get_fbs(fd: RawFd, r: &crate::ffi::DrmResources) -> Vec<super::Framebuffer> {
     unsafe {
         std::slice::from_raw_parts(r.fbs, r.count_fbs as usize).iter().map(|x| {

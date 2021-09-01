@@ -2,7 +2,7 @@ use std::os::unix::prelude::RawFd;
 
 #[derive(Debug)]
 pub struct Device {
-    handle: *const crate::ffi::GbmDevice
+    pub(crate) handle: *const crate::ffi::GbmDevice
 }
 
 impl Device {
