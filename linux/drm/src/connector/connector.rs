@@ -7,7 +7,7 @@ pub struct Connector {
     encoder_id: libc::c_uint,
     connector_type: super::def::ConnectorType,
     connector_type_id: libc::c_uint,
-    connection: super::def::ConnectionStatus,
+    connection_status: super::def::ConnectionStatus,
 
     mm_width: libc::c_uint,
     mm_height: libc::c_uint,
@@ -32,13 +32,21 @@ impl Connector {
             encoder_id : c.encoder_id,
             connector_type : c.connector_type,
             connector_type_id : c.connector_type_id,
-            connection : c.connection,
+            connection_status : c.connection,
             mm_width : c.mm_width,
             mm_height : c.mm_height,
             subpixel : c.subpixel,
             
             modes : get_modes(c)
         }
+    }
+
+    pub fn get_connection_status(&self) -> super::def::ConnectionStatus {
+        self.connection_status
+    }
+
+    pub fn get_encoder_id(&self) -> libc::c_uint {
+        self.encoder_id
     }
 }
 

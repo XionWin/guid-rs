@@ -11,7 +11,7 @@ impl Surface {
             }
         }
     }
-    pub fn new_with_modifiers(device: &crate::Device, width: libc::c_uint, height: libc::c_uint, format: crate::SurfaceFormat, modifiers: Vec<crate::FormatModifier>) -> Self {
+    pub fn new_with_modifiers(device: &crate::Device, width: libc::c_uint, height: libc::c_uint, format: crate::SurfaceFormat, modifiers: &[crate::FormatModifier]) -> Self {
         Self {
             handle: unsafe {
                 crate::ffi::gbm_surface_create_with_modifiers(device.get_handle(), width, height, format, modifiers.as_ptr() as *const _, modifiers.len() as _)

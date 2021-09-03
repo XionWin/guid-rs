@@ -33,6 +33,10 @@ impl Crtc {
             gamma_size : c.gamma_size
         }
     }
+
+    pub fn get_crtc_id(&self) -> libc::c_uint {
+        self.crtc_id
+    }
 }
 
 impl Drop for Crtc {

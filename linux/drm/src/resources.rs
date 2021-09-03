@@ -4,20 +4,20 @@ use crate::{Connector, Crtc, Encoder, Framebuffer};
 
 #[derive(Debug)]
 pub struct Resources {
-    handle: *const crate::ffi::DrmResources,
+    pub(crate) handle: *const crate::ffi::DrmResources,
     
-    fbs: Vec<Framebuffer>,
+    pub(crate) fbs: Vec<Framebuffer>,
 
-    crtcs: Vec<Crtc>,
+    pub(crate) crtcs: Vec<Crtc>,
 
-    connectors: Vec<Connector>,
+    pub(crate) connectors: Vec<Connector>,
     
-    encoders: Vec<Encoder>,
+    pub(crate) encoders: Vec<Encoder>,
 
-    min_width: libc::c_uint,
-    max_width: libc::c_uint,
-    min_height: libc::c_uint,
-    max_height: libc::c_uint,
+    pub(crate) min_width: libc::c_uint,
+    pub(crate) max_width: libc::c_uint,
+    pub(crate) min_height: libc::c_uint,
+    pub(crate) max_height: libc::c_uint,
 }
 
 impl Resources {

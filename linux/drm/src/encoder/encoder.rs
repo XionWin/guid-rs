@@ -19,6 +19,14 @@ impl Encoder {
             possible_clones: e.possible_clones,
         }
     }
+
+    pub fn get_encoder_id(&self) -> libc::c_uint {
+        self.encoder_id
+    }
+
+    pub fn get_crtc_id(&self) -> libc::c_uint {
+        self.crtc_id
+    }
 }
 
 impl Drop for Encoder {
