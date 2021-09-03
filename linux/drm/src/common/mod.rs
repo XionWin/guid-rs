@@ -1,5 +1,5 @@
-mod define;
+mod def;
 mod mode_info;
 
-pub use define::*;
+pub use def::*;
 pub use mode_info::*;

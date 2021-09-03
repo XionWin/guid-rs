@@ -1,5 +1,5 @@
-mod define;
+mod def;
 mod fb;
 
-pub use define::*;
+pub use def::*;
 pub use fb::*;

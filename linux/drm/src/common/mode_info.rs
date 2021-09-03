@@ -19,7 +19,7 @@ pub struct ModeInfo {
     vrefresh: libc::c_int,
 
     flags: libc::c_uint,
-    mode_type: super::define::DrmModeType,
+    mode_type: super::def::DrmModeType,
     name: String,
 }
 

@@ -5,14 +5,14 @@ pub struct Connector {
     handle: *const crate::ffi::DrmConnector,
     connector_id: libc::c_uint,
     encoder_id: libc::c_uint,
-    connector_type: super::define::ConnectorType,
+    connector_type: super::def::ConnectorType,
     connector_type_id: libc::c_uint,
-    connection: super::define::ConnectionStatus,
+    connection: super::def::ConnectionStatus,
 
     mm_width: libc::c_uint,
     mm_height: libc::c_uint,
     
-    subpixel: super::define::SubPixel,
+    subpixel: super::def::SubPixel,
 
     modes: Vec<ModeInfo>,
 

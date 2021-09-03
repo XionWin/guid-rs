@@ -13,6 +13,10 @@ impl Device {
             }
         }
     }
+
+    pub(crate) fn get_handle(&self) -> *const crate::ffi::GbmDevice {
+        self.handle
+    }
 }
 
 impl Drop for Device {

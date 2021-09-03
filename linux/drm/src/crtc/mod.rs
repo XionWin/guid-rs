@@ -1,5 +1,5 @@
-mod define;
+mod def;
 mod crtc;
 
-pub use define::*;
+pub use def::*;
 pub use crtc::*;
