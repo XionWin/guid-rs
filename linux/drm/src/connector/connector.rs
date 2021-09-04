@@ -14,7 +14,7 @@ pub struct Connector {
     
     subpixel: super::def::SubPixel,
 
-    modes: Vec<ModeInfo>,
+    pub(crate) modes: Vec<ModeInfo>,
 
     // count_props: libc::c_int,
     // props: *const libc::c_uint,

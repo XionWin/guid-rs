@@ -11,7 +11,10 @@ fn main() {
         |conn| conn.get_connection_status() == drm::ConnectionStatus::Connected
     );
 
+    let mode = drm.get_mode();
+
     println!("{:#?}", drm);
+    println!("{:#?}", mode);
 
     // let r = gbm::Device::new(fd);
     // println!("{:#?}", r);
@@ -19,5 +22,3 @@ fn main() {
     // let r = gbm::Surface::new_with_modifiers(&r, 1080, 1920, gbm::SurfaceFormat::ARGB8888, &vec![gbm::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
     // println!("{:#?}", r);
 }
-
-

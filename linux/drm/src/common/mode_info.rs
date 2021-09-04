@@ -44,6 +44,10 @@ impl ModeInfo {
             name: get_name(mi),
         }
     }
+
+    pub fn get_mode_type(&self) -> super::def::DrmModeType {
+        self.mode_type
+    }
 }
 
 fn get_name(mi: &crate::ffi::DrmModeInfo) -> String {

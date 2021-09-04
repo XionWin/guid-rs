@@ -1,13 +1,9 @@
-use std::option;
-
 use crate::{ModeInfo, Connector, Crtc, Encoder};
 
 #[derive(Debug)]
 pub struct Drm {
 
     connector: Option<Connector>,
-
-    // mode: ModeInfo,
     
     encoder: Option<Encoder>,
 
@@ -44,6 +40,18 @@ impl Drm {
             connector,
             encoder,
             crtc,
+        }
+    }
+
+    pub fn get_mode(&self) -> Option<&ModeInfo> {
+        match &self.connector {
+            Some(connector) => {
+                match connector.modes.iter().find(|x| bitwise_contains!(x.get_mode_type(), crate::common::DrmModeType::PREFERRED)) {
+                    Some(mode) => Some(mode),
+                    None => None
+                }
+            },
+            None => None,
         }
     }
 }

@@ -9,7 +9,16 @@
 //     };
 // }
 
-extern crate proc_macro;
+#[macro_export]
+macro_rules! bitwise_contains {
+    ($data: expr, $flag: expr) => {
+        $data & $flag == $flag
+    };
+}
+
+
+// extern crate proc_macro;
+
 
 // use crate::proc_macro::TokenStream;
 
@@ -19,3 +28,4 @@ extern crate proc_macro;
 //     let item = dbg!(item);
 //     item
 // }
+
