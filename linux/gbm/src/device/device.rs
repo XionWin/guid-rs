@@ -17,6 +17,15 @@ impl Device {
     pub(crate) fn get_handle(&self) -> *const crate::ffi::GbmDevice {
         self.handle
     }
+
+    pub fn is_format_supported(&self, format: crate::surface::SurfaceFormat, flags: crate::surface::SurfaceFlags) -> bool {
+        unsafe {
+            crate::ffi::gbm_device_is_format_supported(self.handle, format, flags)
+        }
+    }
+
+    
+
 }
 
 impl Drop for Device {

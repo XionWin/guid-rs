@@ -29,7 +29,7 @@ impl Drm {
         };
 
         let crtc = match &encoder {
-            Some(encoder) => match resource.crtcs.iter().position(|x| x.get_crtc_id() == encoder.get_crtc_id()) {
+            Some(encoder) => match resource.crtcs.iter().position(|x| x.get_id() == encoder.get_crtc_id()) {
                 Some(index) => Some(resource.crtcs.remove(index)),
                 None => None
             },
@@ -41,6 +41,10 @@ impl Drm {
             encoder,
             crtc,
         }
+    }
+
+    pub fn get_crtc(&self) -> &Option<Crtc> {
+        &self.crtc
     }
 
     pub fn get_mode(&self) -> Option<&ModeInfo> {

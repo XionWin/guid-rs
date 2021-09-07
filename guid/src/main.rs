@@ -16,9 +16,20 @@ fn main() {
     println!("{:#?}", drm);
     println!("{:#?}", mode);
 
-    // let r = gbm::Device::new(fd);
-    // println!("{:#?}", r);
+    let r = gbm::Device::new(fd);
+    println!("{:#?}", r);
 
-    // let r = gbm::Surface::new_with_modifiers(&r, 1080, 1920, gbm::SurfaceFormat::ARGB8888, &vec![gbm::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
-    // println!("{:#?}", r);
+    for surface_format in gbm::SurfaceFormat::iter() {
+        if r.is_format_supported(surface_format, gbm::SurfaceFlags::Linear) {
+            println!("{:?}", surface_format);
+        }
+    }
+
+    match drm.get_crtc() {
+        Some(crtc) => {
+            let r = gbm::Surface::new_with_modifiers(&r, crtc.get_width(), crtc.get_height(), gbm::SurfaceFormat::ARGB8888, &vec![gbm::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
+            println!("{:#?}", r);
+        },
+        None => {}
+    }
 }

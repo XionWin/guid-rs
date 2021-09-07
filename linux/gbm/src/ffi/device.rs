@@ -8,4 +8,5 @@ pub struct GbmDevice
 extern "C" {
     pub fn gbm_create_device(fd: libc::c_int) -> *const GbmDevice;
     pub fn gbm_device_destroy(handle: *const GbmDevice);
+    pub fn gbm_device_is_format_supported(handle: *const GbmDevice, format: crate::surface::SurfaceFormat, flags: crate::surface::SurfaceFlags) -> bool;
 }

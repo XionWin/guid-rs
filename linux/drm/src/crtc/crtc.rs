@@ -34,8 +34,16 @@ impl Crtc {
         }
     }
 
-    pub fn get_crtc_id(&self) -> libc::c_uint {
+    pub fn get_id(&self) -> libc::c_uint {
         self.crtc_id
+    }
+
+    pub fn get_width(&self) -> libc::c_uint {
+        self.crtc_id
+    }
+
+    pub fn get_height(&self) -> libc::c_uint {
+        self.height
     }
 }
 
