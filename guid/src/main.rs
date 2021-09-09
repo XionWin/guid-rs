@@ -25,11 +25,7 @@ fn main() {
         }
     }
 
-    match drm.get_crtc() {
-        Some(crtc) => {
-            let r = gbm::Surface::new_with_modifiers(&r, crtc.get_width(), crtc.get_height(), gbm::SurfaceFormat::ARGB8888, &vec![gbm::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
+    let crtc = drm.get_crtc();
+    let r = gbm::Surface::new_with_modifiers(&r, crtc.get_width(), crtc.get_height(), gbm::SurfaceFormat::ARGB8888, &vec![gbm::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
             println!("{:#?}", r);
-        },
-        None => {}
-    }
 }

@@ -3,11 +3,11 @@ use crate::{ModeInfo, Connector, Crtc, Encoder};
 #[derive(Debug)]
 pub struct Drm {
 
-    connector: Option<Connector>,
+    connector: Connector,
     
-    encoder: Option<Encoder>,
+    encoder: Encoder,
 
-    crtc: Option<Crtc>,
+    crtc: Crtc,
 }
 
 impl Drm {
@@ -15,25 +15,20 @@ impl Drm {
     where 
         T: FnMut(&Connector) -> bool,
     {
+        
         let connector = match resource.connectors.iter().position(connector_selector) {
-            Some(index) => Some(resource.connectors.remove(index)),
-            None => None
+            Some(index) => resource.connectors.remove(index),
+            None => panic!("Connector not found")
         };
 
-        let encoder = match &connector {
-            Some(connector) => match resource.encoders.iter().position(|x| x.get_encoder_id() == connector.get_encoder_id()) {
-                Some(index) => Some(resource.encoders.remove(index)),
-                None => None
-            },
-            None => None,
+        let encoder = match resource.encoders.iter().position(|x| x.get_encoder_id() == connector.get_encoder_id()) {
+            Some(index) => resource.encoders.remove(index),
+            None => panic!("Encoder not found")
         };
 
-        let crtc = match &encoder {
-            Some(encoder) => match resource.crtcs.iter().position(|x| x.get_id() == encoder.get_crtc_id()) {
-                Some(index) => Some(resource.crtcs.remove(index)),
-                None => None
-            },
-            None => None,
+        let crtc = match resource.crtcs.iter().position(|x| x.get_id() == encoder.get_crtc_id()) {
+            Some(index) => resource.crtcs.remove(index),
+            None => panic!("Crtc not found")
         };
         
         Self{
@@ -43,19 +38,14 @@ impl Drm {
         }
     }
 
-    pub fn get_crtc(&self) -> &Option<Crtc> {
+    pub fn get_crtc(&self) -> &Crtc {
         &self.crtc
     }
 
-    pub fn get_mode(&self) -> Option<&ModeInfo> {
-        match &self.connector {
-            Some(connector) => {
-                match connector.modes.iter().find(|x| bitwise_contains!(x.get_mode_type(), crate::common::DrmModeType::PREFERRED)) {
-                    Some(mode) => Some(mode),
-                    None => None
-                }
-            },
-            None => None,
+    pub fn get_mode(&self) -> &ModeInfo {
+        match self.connector.modes.iter().find(|x| bitwise_contains!(x.get_mode_type(), crate::common::DrmModeType::PREFERRED)) {
+            Some(mode) => mode,
+            None => panic!("Mode not found")
         }
     }
 }

@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate utils;
+
 mod device;
 mod surface;
 mod bo;
