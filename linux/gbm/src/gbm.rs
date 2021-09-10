@@ -4,6 +4,7 @@ use crate::{Device, Surface, SurfaceFormat, FormatModifier};
 
 #[derive(Debug)]
 pub struct Gbm {
+    fd: RawFd,
     device: Device,
     surface: Surface,
     surface_format: SurfaceFormat,
@@ -13,11 +14,19 @@ pub struct Gbm {
 }
 
 impl Gbm {
-    pub fn new(fd: RawFd, width: libc::c_uint, height: libc::c_uint, surface_format: SurfaceFormat, format_modifiers: Vec<FormatModifier>) -> Self
+    pub fn new(drm: drm::Drm) -> Self
     {
+        let fd = drm.get_fd();
+        let crtc = drm.get_crtc();
+        let surface_format = SurfaceFormat::ARGB8888;
+        let format_modifiers = vec![FormatModifier::DRM_FORMAT_MOD_LINEAR];
+        let width = crtc.get_width();
+        let height = crtc.get_height();
+
         let device = Device::new(fd);
         let surface = Surface::new_with_modifiers(&device, width, height, surface_format, &format_modifiers);
         Self{
+            fd,
             device,
             surface,
             surface_format,

@@ -4,6 +4,7 @@ use crate::{Connector, Crtc, Encoder, Framebuffer};
 
 #[derive(Debug)]
 pub struct Resources {
+    fd: RawFd,
     pub(crate) handle: *const crate::ffi::DrmResources,
     
     pub(crate) fbs: Vec<Framebuffer>,
@@ -26,6 +27,7 @@ impl Resources {
         let r = unsafe { handle.as_ref().unwrap() };
         
         Self {
+            fd,
             handle,
             fbs: get_fbs(fd, r),
             crtcs: get_crtcs(fd, r),
@@ -36,6 +38,11 @@ impl Resources {
             min_height: r.min_height,
             max_height: r.max_height,
         }
+    }
+
+    
+    pub fn get_fd(&self) -> RawFd {
+        self.fd
     }
 }
 

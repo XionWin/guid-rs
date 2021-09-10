@@ -1,7 +1,10 @@
+use std::os::unix::prelude::RawFd;
+
 use crate::{ModeInfo, Connector, Crtc, Encoder};
 
 #[derive(Debug)]
 pub struct Drm {
+    fd: RawFd,
 
     connector: Connector,
     
@@ -32,10 +35,14 @@ impl Drm {
         };
         
         Self{
+            fd: resource.get_fd(),
             connector,
             encoder,
             crtc,
         }
+    }
+    pub fn get_fd(&self) -> RawFd {
+        self.fd
     }
 
     pub fn get_crtc(&self) -> &Crtc {

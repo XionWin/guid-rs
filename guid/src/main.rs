@@ -5,7 +5,7 @@ fn main() {
     println!("{:}: {}", file.get_path(), fd);
     let r = drm::Resources::new(fd);
     println!("{:#?}", r);
-        
+    
     let drm = drm::Drm::new(
         r,
         |conn| conn.get_connection_status() == drm::ConnectionStatus::Connected
@@ -17,14 +17,12 @@ fn main() {
     println!("{:#?}", mode);
 
 
-    let crtc = drm.get_crtc();
-    let r = gbm::Gbm::new(fd, crtc.get_width(), crtc.get_height(), gbm::SurfaceFormat::ARGB8888, vec![gbm::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
-    println!("{:#?}", r);
+    let gbm = gbm::Gbm::new(drm);
+    println!("{:#?}", gbm);
 
-    
     for surface_format in gbm::SurfaceFormat::iter() {
-        if r.get_device().is_format_supported(surface_format, gbm::SurfaceFlags::Linear) {
+        if gbm.get_device().is_format_supported(surface_format, gbm::SurfaceFlags::Linear) {
             println!("{:?}", surface_format);
-        }
+        } 
     }
 }
