@@ -20,6 +20,7 @@ const fn fourcc_mod_code(vendor: ModifierVendor, val: libc::c_ulonglong) -> libc
 }
 const DRM_FORMAT_RESERVED: libc::c_ulonglong = ((1 as libc::c_ulonglong) << 56) - 1;
 
+#[derive(Debug)]
 #[allow(non_camel_case_types)]
 #[repr(u64)]
 pub enum FormatModifier {
