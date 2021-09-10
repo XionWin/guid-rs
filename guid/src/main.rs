@@ -12,12 +12,10 @@ fn main() {
     );
 
     let mode = drm.get_mode();
-
     println!("{:#?}", drm);
     println!("{:#?}", mode);
 
-
-    let gbm = gbm::Gbm::new(drm);
+    let gbm = gbm::Gbm::new(drm, gbm::SurfaceFormat::ARGB8888, vec![gbm::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
     println!("{:#?}", gbm);
 
     for surface_format in gbm::SurfaceFormat::iter() {

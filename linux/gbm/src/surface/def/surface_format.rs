@@ -5,9 +5,7 @@ iterable_enum! {
     #[derive(Debug, Clone, Copy)]
     pub enum SurfaceFormat {
         BIG_ENDIAN = 1u32 << 31,
-
         INVALID = 0u32,
-    
         C8 = (b'C' as u32) | (b'8' as u32) << 8 | (b' ' as u32) << 16 | (b' ' as u32) << 24,
         R8 = (b'R' as u32) | (b'8' as u32) << 8 | (b' ' as u32) << 16 | (b' ' as u32) << 24,
         R16 = (b'R' as u32) | (b'1' as u32) << 8 | (b'6' as u32) << 16 | (b' ' as u32) << 24,

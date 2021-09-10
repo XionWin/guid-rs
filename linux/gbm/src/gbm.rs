@@ -14,12 +14,10 @@ pub struct Gbm {
 }
 
 impl Gbm {
-    pub fn new(drm: drm::Drm) -> Self
+    pub fn new(drm: drm::Drm, surface_format: SurfaceFormat, format_modifiers: Vec<FormatModifier>) -> Self
     {
         let fd = drm.get_fd();
         let crtc = drm.get_crtc();
-        let surface_format = SurfaceFormat::ARGB8888;
-        let format_modifiers = vec![FormatModifier::DRM_FORMAT_MOD_LINEAR];
         let width = crtc.get_width();
         let height = crtc.get_height();
 
@@ -35,7 +33,6 @@ impl Gbm {
             height,
         }
     }
-
     
     pub fn get_device(&self) -> &Device {
         &self.device
