@@ -20,22 +20,3 @@ pub enum ConnectorType {
     DSI = 16,
     DPI = 17,
 }
-
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
-#[repr(u32)]
-pub enum ConnectionStatus {
-    Connected = 1,
-    Disconnected = 2,
-    Unknown = 3,
-}
-
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
-#[repr(u32)]
-pub enum SubPixel {
-    Unknown = 1,
-    HorizontalRgb = 2,
-    HorizontalBgr = 3,
-    VerticalRgb = 4,
-    VerticalBgr = 5,
-    None = 6,
-}

@@ -7,6 +7,7 @@ mod surface;
 mod bo;
 mod gbm;
 pub(crate) mod ffi;
+pub mod def;
 
 
 pub use device::*;

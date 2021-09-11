@@ -5,14 +5,14 @@ pub struct Connector {
     handle: *const crate::ffi::DrmConnector,
     connector_id: libc::c_uint,
     encoder_id: libc::c_uint,
-    connector_type: super::def::ConnectorType,
+    connector_type: crate::def::ConnectorType,
     connector_type_id: libc::c_uint,
-    connection_status: super::def::ConnectionStatus,
+    connection_status: crate::def::ConnectionStatus,
 
     mm_width: libc::c_uint,
     mm_height: libc::c_uint,
     
-    subpixel: super::def::SubPixel,
+    subpixel: crate::def::SubPixel,
 
     pub(crate) modes: Vec<ModeInfo>,
 
@@ -41,7 +41,7 @@ impl Connector {
         }
     }
 
-    pub fn get_connection_status(&self) -> super::def::ConnectionStatus {
+    pub fn get_connection_status(&self) -> crate::def::ConnectionStatus {
         self.connection_status
     }
 
@@ -59,8 +59,8 @@ impl Drop for Connector {
     }
 }
 
-fn get_modes(c: &crate::ffi::DrmConnector) -> Vec<crate::common::ModeInfo> {
+fn get_modes(c: &crate::ffi::DrmConnector) -> Vec<crate::ModeInfo> {
     unsafe {std::slice::from_raw_parts(c.modes, c.count_modes as usize)}.iter().map(|x| {
-        crate::common::ModeInfo::new(x)
-    }).collect::<Vec<crate::common::ModeInfo>>()
+        crate::ModeInfo::new(x)
+    }).collect::<Vec<crate::ModeInfo>>()
 }

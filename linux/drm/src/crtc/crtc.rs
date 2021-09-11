@@ -13,7 +13,7 @@ pub struct Crtc
 
     mode_valid: libc::c_int,
 
-    mode: crate::common::ModeInfo,
+    mode: crate::ModeInfo,
 
     gamma_size: libc::c_int
 }
@@ -56,6 +56,6 @@ impl Drop for Crtc {
     }
 }
 
-fn get_mode(c: &crate::ffi::DrmCrtc) -> crate::common::ModeInfo {
-    crate::common::ModeInfo::new(&c.mode)
+fn get_mode(c: &crate::ffi::DrmCrtc) -> crate::ModeInfo {
+    crate::ModeInfo::new(&c.mode)
 }

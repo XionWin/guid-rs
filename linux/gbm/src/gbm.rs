@@ -1,6 +1,6 @@
 use std::os::unix::prelude::RawFd;
 
-use crate::{Device, Surface, SurfaceFormat, FormatModifier};
+use crate::{Device, Surface, def::{SurfaceFormat, FormatModifier}};
 
 #[derive(Debug)]
 pub struct Gbm {

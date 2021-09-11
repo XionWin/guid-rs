@@ -5,7 +5,7 @@ use std::os::unix::prelude::RawFd;
 pub struct DrmEncoder
 {
     pub encoder_id: libc::c_uint,
-    pub encoder_type: crate::encoder::EncoderType,
+    pub encoder_type: crate::def::EncoderType,
     pub crtc_id: libc::c_uint,
     pub possible_crtcs: libc::c_uint,
     pub possible_clones: libc::c_uint,

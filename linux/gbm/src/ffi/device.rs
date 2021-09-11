@@ -10,5 +10,5 @@ pub struct GbmDevice
 extern "C" {
     pub fn gbm_create_device(fd: RawFd) -> *const GbmDevice;
     pub fn gbm_device_destroy(handle: *const GbmDevice);
-    pub fn gbm_device_is_format_supported(handle: *const GbmDevice, format: crate::surface::SurfaceFormat, flags: crate::surface::SurfaceFlags) -> bool;
+    pub fn gbm_device_is_format_supported(handle: *const GbmDevice, format: crate::def::SurfaceFormat, flags: crate::def::SurfaceFlags) -> bool;
 }

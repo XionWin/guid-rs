@@ -2,7 +2,7 @@
 pub struct Encoder {
     handle: *const crate::ffi::DrmEncoder,
     encoder_id: libc::c_uint,
-    encoder_type: crate::encoder::EncoderType,
+    encoder_type: crate::def::EncoderType,
     crtc_id: libc::c_uint,
     possible_crtcs: libc::c_uint,
     possible_clones: libc::c_uint,

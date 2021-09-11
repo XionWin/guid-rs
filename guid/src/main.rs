@@ -8,18 +8,18 @@ fn main() {
     
     let drm = drm::Drm::new(
         r,
-        |conn| conn.get_connection_status() == drm::ConnectionStatus::Connected
+        |conn| conn.get_connection_status() == drm::def::ConnectionStatus::Connected
     );
 
     let mode = drm.get_mode();
     println!("{:#?}", drm);
     println!("{:#?}", mode);
 
-    let gbm = gbm::Gbm::new(drm, gbm::SurfaceFormat::ARGB8888, vec![gbm::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
+    let gbm = gbm::Gbm::new(drm, gbm::def::SurfaceFormat::ARGB8888, vec![gbm::def::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
     println!("{:#?}", gbm);
 
-    for surface_format in gbm::SurfaceFormat::iter() {
-        if gbm.get_device().is_format_supported(surface_format, gbm::SurfaceFlags::Linear) {
+    for surface_format in gbm::def::SurfaceFormat::iter() {
+        if gbm.get_device().is_format_supported(surface_format, gbm::def::SurfaceFlags::Linear) {
             println!("{:?}", surface_format);
         } 
     }

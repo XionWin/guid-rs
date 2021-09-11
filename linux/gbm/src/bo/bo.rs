@@ -10,7 +10,7 @@ impl BufferObject {
         }
     }
 
-    pub fn create(handle: *const crate::ffi::GbmDevice, width: libc::c_uint, height: libc::c_uint, format: crate::SurfaceFormat, flags: crate::SurfaceFlags) -> Self {
+    pub fn create(handle: *const crate::ffi::GbmDevice, width: libc::c_uint, height: libc::c_uint, format: crate::def::SurfaceFormat, flags: crate::def::SurfaceFlags) -> Self {
         Self {
             handle: unsafe {
                 crate::ffi::gbm_bo_create(handle, width, height, format, flags)

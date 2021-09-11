@@ -19,7 +19,7 @@ pub struct ModeInfo {
     vrefresh: libc::c_int,
 
     flags: libc::c_uint,
-    mode_type: super::def::DrmModeType,
+    mode_type: crate::def::DrmModeType,
     name: String,
 }
 
@@ -45,7 +45,7 @@ impl ModeInfo {
         }
     }
 
-    pub fn get_mode_type(&self) -> super::def::DrmModeType {
+    pub fn get_mode_type(&self) -> crate::def::DrmModeType {
         self.mode_type
     }
 }
