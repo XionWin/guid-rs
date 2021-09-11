@@ -19,7 +19,10 @@
 // extern "C" {
 //     pub fn eglGetProcAddress(func_name: *const libc::c_char) -> *const fn(libc::c_int, libc::c_int, libc::c_int) -> libc::c_int;
 // }
+#[macro_use]
+extern crate bitflags;
 
+extern crate libc;
 
 pub(crate) mod ffi;
 pub mod def;
