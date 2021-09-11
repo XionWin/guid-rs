@@ -23,4 +23,7 @@ fn main() {
             println!("{:?}", surface_format);
         } 
     }
+
+
+    egl::test(gbm, "eglGetPlatformDisplayEXT");
 }

@@ -9,3 +9,4 @@ edition = "2018"
 libc={path="../linux/libc"}
 drm={path="../linux/drm"}
 gbm={path="../linux/gbm"}
+egl={path="../linux/egl"}
