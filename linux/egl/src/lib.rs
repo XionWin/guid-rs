@@ -20,9 +20,7 @@
 //     pub fn eglGetProcAddress(func_name: *const libc::c_char) -> *const fn(libc::c_int, libc::c_int, libc::c_int) -> libc::c_int;
 // }
 
-mod error;
 
 pub(crate) mod ffi;
+pub mod def;
 
-
-pub use error::*;
