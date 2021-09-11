@@ -1,3 +1,5 @@
+use std::os::unix::prelude::RawFd;
+
 #[derive(Debug)]
 #[repr(C)]
 pub struct DrmResources {
@@ -21,5 +23,5 @@ pub struct DrmResources {
 
 #[link(name = "drm")]
 extern "C" {
-    pub fn drmModeGetResources(fd: libc::c_int) -> *const DrmResources;
+    pub fn drmModeGetResources(fd: RawFd) -> *const DrmResources;
 }

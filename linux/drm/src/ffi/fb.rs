@@ -1,3 +1,5 @@
+use std::os::unix::prelude::RawFd;
+
 #[derive(Debug)]
 #[repr(C)]
 pub struct DrmFramebuffer
@@ -14,7 +16,7 @@ pub struct DrmFramebuffer
 
 #[link(name = "drm")]
 extern "C" {
-    pub fn drmModeGetFB(fd: libc::c_int, fb_id: libc::c_uint) -> *const DrmFramebuffer;
+    pub fn drmModeGetFB(fd: RawFd, fb_id: libc::c_uint) -> *const DrmFramebuffer;
 
     pub fn drmModeFreeFB(ptr: *const DrmFramebuffer);
 }

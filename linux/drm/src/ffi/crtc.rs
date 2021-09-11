@@ -1,3 +1,5 @@
+use std::os::unix::prelude::RawFd;
+
 #[derive(Debug)]
 #[repr(C)]
 pub struct DrmCrtc
@@ -20,6 +22,6 @@ pub struct DrmCrtc
 
 #[link(name = "drm")]
 extern "C" {
-    pub fn drmModeGetCrtc(fd: libc::c_int, crtc_id: libc::c_uint) -> *const DrmCrtc;
+    pub fn drmModeGetCrtc(fd: RawFd, crtc_id: libc::c_uint) -> *const DrmCrtc;
     pub fn drmModeFreeCrtc(handle: *const DrmCrtc);
 }

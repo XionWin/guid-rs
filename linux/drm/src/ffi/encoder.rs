@@ -1,3 +1,5 @@
+use std::os::unix::prelude::RawFd;
+
 #[derive(Debug)]
 #[repr(C)]
 pub struct DrmEncoder
@@ -11,6 +13,6 @@ pub struct DrmEncoder
 
 #[link(name = "drm")]
 extern "C" {
-    pub fn drmModeGetEncoder(fd: libc::c_int, encoder_id: libc::c_uint) -> *const DrmEncoder;
+    pub fn drmModeGetEncoder(fd: RawFd, encoder_id: libc::c_uint) -> *const DrmEncoder;
     pub fn drmModeFreeEncoder(handle: *const DrmEncoder);
 }
