@@ -24,6 +24,10 @@ extern crate bitflags;
 
 extern crate libc;
 
+mod context;
 pub(crate) mod ffi;
 pub mod def;
+
+
+pub use context::*;
 

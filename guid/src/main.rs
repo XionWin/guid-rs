@@ -24,6 +24,5 @@ fn main() {
         } 
     }
 
-
-    // egl::test(gbm, "eglGetPlatformDisplayEXT");
+    egl::Context::new(gbm);
 }

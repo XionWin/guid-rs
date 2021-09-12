@@ -18,8 +18,8 @@ impl Device {
         self.handle
     }
 
-    pub fn get_handle(&self) -> libc::c_int {
-        self.handle as libc::c_int
+    pub fn get_handle(&self) -> libc::c_uint {
+        self.handle as libc::c_uint
     }
 
     pub fn is_format_supported(&self, format: crate::def::SurfaceFormat, flags: crate::def::SurfaceFlags) -> bool {
