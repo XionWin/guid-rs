@@ -1,4 +1,5 @@
 #[allow(dead_code)]
+#[derive(Debug)]
 pub enum ErrorCode
 {
     NotInitialized = 0x3001,

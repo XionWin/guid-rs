@@ -24,5 +24,9 @@ fn main() {
         } 
     }
 
-    egl::Context::new(gbm);
+    let context = egl::Context::new(gbm);
+    println!("{:#?}", context);
+
+    let (major, minor) = context.get_egl_version();
+    println!("EGL version major: {}, minor: {}", major, minor);
 }
