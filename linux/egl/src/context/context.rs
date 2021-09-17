@@ -44,23 +44,27 @@ impl Context {
         }
     }
 
-    pub fn get_display_raw(&self) -> libc::c_uint {
-        self.display
-    }
-
-    pub fn get_egl_version(&self) -> (libc::c_uint, libc::c_uint) {
-        let mut major  = 0;
-        let mut minor = 0;
-        unsafe {
-            println!("1: {}", self.display);
-            let r = crate::ffi::eglInitialize(self.display, &mut major, &mut minor);
-            if !r {
-                panic!("[EGL] Failed to initialize EGL display. Error code: {:?}", crate::ffi::eglGetError());
-            }
+    pub fn init(&self) -> (libc::c_uint, libc::c_uint) {
+        let (mut major, mut minor) = (0, 0);
+        if !unsafe { crate::ffi::eglInitialize(self.display, &mut major, &mut minor) } {
+            panic!(
+                "[EGL] Failed to initialize EGL display. Error code: {:?}",
+                unsafe { crate::ffi::eglGetError() }
+            );
         }
+        
+        match get_extensions_by_display(self.display) {
+            Some(extensions) if !extensions.contains("EGL_EXT_image_dma_buf_import_modifiers") => 
+                panic!("Can't get \"EGL_EXT_image_dma_buf_import_modifiers\" in extensions"),
+            None => panic!("Get egl display error"),
+            _ => {}
+        };
+
         (major as _, minor as _)
     }
+
 }
+
 
 fn get_egl_get_platform_display_ext_func(
     func_name: &str,
