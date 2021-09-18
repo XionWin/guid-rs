@@ -18,6 +18,10 @@ impl Surface {
             }
         }
     }
+
+    pub fn get_handle(&self) -> libc::c_int {
+        self.handle as _
+    }
 }
 
 impl Drop for Surface {

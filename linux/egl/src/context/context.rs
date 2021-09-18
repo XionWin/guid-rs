@@ -90,18 +90,39 @@ impl Context {
             crate::def::Definition::NONE
         ];
 
-        get_egl_context(self.display, configs[0], (&context_attrib).as_ptr());
+        let context = get_egl_context(self.display, configs[0], (&context_attrib).as_ptr());
+        println!("egl context: {:#x}", context);
+
+        
+        
+        let surface = get_egl_surface(self.display, configs[0], self.gbm.get_surface().get_handle() as _);
+        println!("egl surface: {:#x}", surface);
+
+        egl_make_current(self.display, surface, context);
 
         (major as _, minor as _)
     }
 
 }
 
-fn get_egl_context(display: crate::ffi::EglDisplay, config: EglConfig, attrib_list: *const libc::c_int) {
-    
-    let context = unsafe { crate::ffi::eglCreateContext(display, config, 0 as _, attrib_list) };
-    
-    println!("egl context: {:#x}", context);
+fn egl_make_current(display: crate::ffi::EglDisplay, surface: crate::ffi::EglSurface, context: crate::ffi::EglContext) {
+    if !unsafe { crate::ffi::eglMakeCurrent(display, surface, surface, context) } {
+        panic!("[EGL] Failed to make current, error {:?}", unsafe { crate::ffi::eglGetError() });
+    }
+}
+
+fn get_egl_surface(display: crate::ffi::EglDisplay, config: EglConfig, native_wnd_handle: libc::c_uint) -> crate::ffi::EglSurface {
+    match unsafe { crate::ffi::eglCreateWindowSurface(display, config, native_wnd_handle, 0 as _) } {
+        handle if handle == 0  => panic!("[EGL] Failed to create egl surface, error {:?}", unsafe { crate::ffi::eglGetError() }),
+        handle => handle,
+    }
+}
+
+fn get_egl_context(display: crate::ffi::EglDisplay, config: EglConfig, attrib_list: *const libc::c_int) -> crate::ffi::EglContext {
+    match unsafe { crate::ffi::eglCreateContext(display, config, 0 as _, attrib_list) } {
+        handle if handle == 0  => panic!("[EGL] Failed to create egl context, error {:?}", unsafe { crate::ffi::eglGetError() }),
+        handle => handle,
+    }
 }
 
 

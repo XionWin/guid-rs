@@ -1,6 +1,8 @@
 pub type EglDisplay = libc::c_uint;
 pub type EglConfig = libc::c_uint;
 pub type EglContext = libc::c_uint;
+pub type EGLNativeWindowType = libc::c_uint;
+pub type EglSurface = libc::c_uint;
 
 #[link(name = "EGL")]
 #[allow(improper_ctypes)]
@@ -14,5 +16,8 @@ extern "C" {
     pub fn eglChooseConfig(display: EglDisplay, attrib_list: *const libc::c_int, configs: *mut EglConfig, config_size: libc::c_int, num_config: *mut libc::c_int) -> bool;
     pub fn eglCreateContext(display: EglDisplay, config: EglConfig, share_context: EglContext, attrib_list: *const libc::c_int) -> EglContext;
 
-
+    pub fn eglCreateWindowSurface(display: EglDisplay, config: EglConfig, native_window: EGLNativeWindowType, attrib_list: *const libc::c_int) -> EglSurface;
+    
+    
+    pub fn eglMakeCurrent(display: EglDisplay, draw: EglSurface, read: EglSurface, context: EglContext) -> bool;
 }

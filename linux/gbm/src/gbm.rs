@@ -39,4 +39,7 @@ impl Gbm {
     pub fn get_device(&self) -> &Device {
         &self.device
     }
+    pub fn get_surface(&self) -> &Surface {
+        &self.surface
+    }
 }
