@@ -26,5 +26,6 @@ fn main() {
 
     let context = egl::Context::new(gbm);
     println!("{:#?}", context);
+    context.init();
 
 }
