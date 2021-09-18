@@ -5,11 +5,11 @@ pub struct Crtc
     crtc_id: libc::c_uint,
     buffer_id: libc::c_uint,
 
-    x: libc::c_uint,
-    y: libc::c_uint,
+    x: libc::c_int,
+    y: libc::c_int,
 
-    width: libc::c_uint,
-    height: libc::c_uint,
+    width: libc::c_int,
+    height: libc::c_int,
 
     mode_valid: libc::c_int,
 
@@ -38,11 +38,11 @@ impl Crtc {
         self.crtc_id
     }
 
-    pub fn get_width(&self) -> libc::c_uint {
-        self.crtc_id
+    pub fn get_width(&self) -> libc::c_int {
+        self.width
     }
 
-    pub fn get_height(&self) -> libc::c_uint {
+    pub fn get_height(&self) -> libc::c_int {
         self.height
     }
 }

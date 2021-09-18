@@ -7,11 +7,11 @@ pub struct DrmCrtc
     pub crtc_id: libc::c_uint,
     pub buffer_id: libc::c_uint,
 
-    pub x: libc::c_uint,
-    pub y: libc::c_uint,
+    pub x: libc::c_int,
+    pub y: libc::c_int,
 
-    pub width: libc::c_uint,
-    pub height: libc::c_uint,
+    pub width: libc::c_int,
+    pub height: libc::c_int,
 
     pub mode_valid: libc::c_int,
 

@@ -7,7 +7,14 @@ const EGL_PLATFORM_GBM_KHR: libc::c_uint = 0x31D7;
 #[derive(Debug)]
 pub struct Context {
     gbm: gbm::Gbm,
-    display: libc::c_uint,
+    display: crate::ffi::EglDisplay,
+    config: crate::ffi::EglConfig,
+    context: crate::ffi::EglContext,
+    surface: crate::ffi::EglSurface,
+    version: (libc::c_uint, libc::c_uint),
+    width: libc::c_int,
+    height: libc::c_int,
+    vertical_synchronization : bool,
 }
 impl Context {
     pub fn new(gbm: gbm::Gbm) -> Self {
@@ -40,68 +47,71 @@ impl Context {
             });
         }
 
+        let (major, minor, config, context, surface) = init(display_handle, &gbm);
+
         Self {
+            width: gbm.get_width(),
+            height: gbm.get_height(),
             gbm,
             display: display_handle,
+            config,
+            context,
+            surface,
+            version: (major, minor),
+            vertical_synchronization: false,
         }
     }
 
-    pub fn init(&self) -> (libc::c_uint, libc::c_uint) {
-        let (mut major, mut minor) = (0, 0);
-        if !unsafe { crate::ffi::eglInitialize(self.display, &mut major, &mut minor) } {
-            panic!(
-                "[EGL] Failed to initialize EGL display. Error code: {:?}",
-                unsafe { crate::ffi::eglGetError() }
-            );
-        }
+}
 
-        match get_extensions_by_display(self.display) {
-            Some(extensions) if !extensions.contains("EGL_EXT_image_dma_buf_import_modifiers") => 
-                panic!("Can't get \"EGL_EXT_image_dma_buf_import_modifiers\" in extensions"),
-            None => panic!("Get \"eglGetPlatformDisplayEXT\" error"),
-            _ => {}
-        };
-
-        bind_egl_api(crate::def::RenderAPI::GLES);
-
-        let desired_config = [
-            crate::def::Definition::SURFACE_TYPE, crate::def::SurfaceType::OpenGLES as _,
-            crate::def::Definition::RENDERABLE_TYPE, crate::def::Definition::OPENGL_ES3_BIT,
-            crate::def::Definition::RED_SIZE, 8,
-            crate::def::Definition::GREEN_SIZE, 8,
-            crate::def::Definition::BLUE_SIZE, 8,
-            crate::def::Definition::ALPHA_SIZE, 8,
-            crate::def::Definition::STENCIL_SIZE, 8,
-            crate::def::Definition::SAMPLE_BUFFERS, 0,
-            crate::def::Definition::SAMPLES, 0,
-            crate::def::Definition::NONE
-        ];
-
-        let size = get_egl_config_count(self.display, &desired_config as _);
-        println!("get_egl_config_count: {}", size);
-
-        let mut configs = vec![0; size as _];
-        get_egl_config_by_count(self.display, &desired_config as _, &mut configs);
-        println!("egl configs: {:#x?}", configs);
-
-        
-        let context_attrib = [
-            crate::def::Definition::CONTEXT_CLIENT_VERSION, 2,
-            crate::def::Definition::NONE
-        ];
-
-        let context = get_egl_context(self.display, configs[0], (&context_attrib).as_ptr());
-        println!("egl context: {:#x}", context);
-
-        
-        
-        let surface = get_egl_surface(self.display, configs[0], self.gbm.get_surface().get_handle() as _);
-        println!("egl surface: {:#x}", surface);
-
-        egl_make_current(self.display, surface, context);
-
-        (major as _, minor as _)
+fn init(display: crate::ffi::EglDisplay, gbm: &gbm::Gbm) -> (libc::c_uint, libc::c_uint, crate::ffi::EglConfig, crate::ffi::EglContext, crate::ffi::EglSurface) {
+    let (mut major, mut minor) = (0, 0);
+    if !unsafe { crate::ffi::eglInitialize(display, &mut major, &mut minor) } {
+        panic!(
+            "[EGL] Failed to initialize EGL display. Error code: {:?}",
+            unsafe { crate::ffi::eglGetError() }
+        );
     }
+
+    match get_extensions_by_display(display) {
+        Some(extensions) if !extensions.contains("EGL_EXT_image_dma_buf_import_modifiers") => 
+            panic!("Can't get \"EGL_EXT_image_dma_buf_import_modifiers\" in extensions"),
+        None => panic!("Get \"eglGetPlatformDisplayEXT\" error"),
+        _ => {}
+    };
+
+    bind_egl_api(crate::def::RenderAPI::GLES);
+
+    let desired_config = [
+        crate::def::Definition::SURFACE_TYPE, crate::def::SurfaceType::OpenGLES as _,
+        crate::def::Definition::RENDERABLE_TYPE, crate::def::Definition::OPENGL_ES3_BIT,
+        crate::def::Definition::RED_SIZE, 8,
+        crate::def::Definition::GREEN_SIZE, 8,
+        crate::def::Definition::BLUE_SIZE, 8,
+        crate::def::Definition::ALPHA_SIZE, 8,
+        crate::def::Definition::STENCIL_SIZE, 8,
+        crate::def::Definition::SAMPLE_BUFFERS, 0,
+        crate::def::Definition::SAMPLES, 0,
+        crate::def::Definition::NONE
+    ];
+
+    let size = get_egl_config_count(display, &desired_config as _);
+
+    let mut configs = vec![0; size as _];
+    get_egl_config_by_count(display, &desired_config as _, &mut configs);
+
+    let config = configs[0];
+    
+    let context_attrib = [
+        crate::def::Definition::CONTEXT_CLIENT_VERSION, 2,
+        crate::def::Definition::NONE
+    ];
+
+    let context = get_egl_context(display, config, (&context_attrib).as_ptr());
+    let surface = get_egl_surface(display, config, gbm.get_surface().get_handle() as _);
+    egl_make_current(display, surface, context);
+
+    (major as _, minor as _, config, context, surface)
 }
 
 fn egl_make_current(display: crate::ffi::EglDisplay, surface: crate::ffi::EglSurface, context: crate::ffi::EglContext) {
