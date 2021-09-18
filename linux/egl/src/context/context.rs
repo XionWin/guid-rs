@@ -102,7 +102,6 @@ impl Context {
 
         (major as _, minor as _)
     }
-
 }
 
 fn egl_make_current(display: crate::ffi::EglDisplay, surface: crate::ffi::EglSurface, context: crate::ffi::EglContext) {
