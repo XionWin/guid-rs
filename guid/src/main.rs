@@ -24,8 +24,9 @@ fn main() {
         } 
     }
 
-    let context = egl::Context::new(gbm);
+    let mut context = egl::Context::new(gbm);
     println!("{:#?}", context);
-    context.init();
+    context.initialize();
+
 
 }

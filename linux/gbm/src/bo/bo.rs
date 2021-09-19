@@ -1,6 +1,8 @@
+use crate::gbm;
+
 #[derive(Debug)]
 pub struct BufferObject {
-    handle: *const crate::ffi::GbmBufferObject
+    handle: *const crate::ffi::GbmBufferObject,
 }
 
 impl BufferObject {
@@ -30,6 +32,14 @@ impl BufferObject {
         unsafe {
             crate::ffi::gbm_bo_get_handle_for_plane(self.handle, plane)
         }
+    }
+
+    pub(crate) fn get_fb(&self, device: &crate::Device) -> libc::c_int {
+        let user_data = unsafe { crate::ffi::gbm_bo_get_user_data(self.handle) };
+        if user_data != std::ptr::null() {
+            
+        }
+        0
     }
 
 

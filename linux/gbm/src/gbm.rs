@@ -42,6 +42,9 @@ impl Gbm {
     pub fn get_surface(&self) -> &Surface {
         &self.surface
     }
+    pub fn get_surface_mut(&mut self) -> &mut Surface {
+        &mut self.surface
+    }
 
     
     pub fn get_width(&self) -> libc::c_int {

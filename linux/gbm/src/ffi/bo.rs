@@ -12,12 +12,20 @@ pub struct GbmBufferObject
 {
 }
 
+#[repr(C)]
+pub struct GbmUserData
+{
+}
+
 #[link(name = "gbm")]
 #[allow(improper_ctypes)]
 extern "C" {
     pub fn gbm_bo_create(handle: *const crate::ffi::GbmDevice, width: libc::c_uint, height: libc::c_uint, format: crate::def::SurfaceFormat, flags: crate::def::SurfaceFlags) -> *const GbmBufferObject;
     pub fn gbm_bo_get_handle_for_plane(handle: *const GbmBufferObject, plane: libc::c_int) -> GbmBufferObjectHandle;
     pub fn gbm_bo_get_handle(handle: *const GbmBufferObject) -> GbmBufferObjectHandle;
+
+    pub fn gbm_bo_get_user_data(handle: *const GbmBufferObject) -> *const GbmUserData;
+    pub fn gbm_bo_get_plane_count(handle: *const GbmBufferObject) -> libc::c_int;
 
     pub fn gbm_bo_destroy(handle: *const GbmBufferObject);
 }

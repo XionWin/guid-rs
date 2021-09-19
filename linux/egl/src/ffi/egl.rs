@@ -18,6 +18,7 @@ extern "C" {
 
     pub fn eglCreateWindowSurface(display: EglDisplay, config: EglConfig, native_window: EGLNativeWindowType, attrib_list: *const libc::c_int) -> EglSurface;
     
+    pub fn eglSwapBuffers(display: EglDisplay, surface: EglSurface) -> bool;
     
     pub fn eglMakeCurrent(display: EglDisplay, draw: EglSurface, read: EglSurface, context: EglContext) -> bool;
 }
