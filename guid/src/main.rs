@@ -28,5 +28,7 @@ fn main() {
     println!("{:#?}", context);
     context.initialize();
 
+    context.render();
+
 
 }

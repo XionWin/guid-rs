@@ -31,6 +31,9 @@ impl Gbm {
             height,
         }
     }
+    pub fn get_drm(&self) -> &drm::Drm {
+        &self.drm
+    }
     
     pub fn get_surface(&self) -> &Surface {
         &self.surface

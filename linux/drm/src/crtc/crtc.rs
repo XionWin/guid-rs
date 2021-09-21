@@ -1,3 +1,5 @@
+use std::os::unix::prelude::RawFd;
+
 #[derive(Debug)]
 pub struct Crtc
 {
@@ -56,6 +58,22 @@ impl Drop for Crtc {
     }
 }
 
+pub fn set_crtc(
+    fd: RawFd,
+    crtc_id: libc::c_uint,
+    buffer_id: libc::c_uint,
+    x: libc::c_uint,
+    y: libc::c_uint,
+    connectors: *const libc::c_uint,
+    count: libc::c_uint,
+    mode: *const std::ffi::c_void,
+) -> libc::c_int {
+    unsafe {
+        crate::ffi::drmModeSetCrtc(fd, crtc_id, buffer_id, x, y, connectors, count, mode)
+    }
+}
+
 fn get_mode(c: &crate::ffi::DrmCrtc) -> crate::ModeInfo {
     crate::ModeInfo::new(&c.mode)
 }
+

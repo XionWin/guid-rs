@@ -44,6 +44,10 @@ impl Drm {
     pub fn get_fd(&self) -> RawFd {
         self.fd
     }
+    
+    pub fn get_connector(&self) -> &Connector {
+        &self.connector
+    }
 
     pub fn get_crtc(&self) -> &Crtc {
         &self.crtc

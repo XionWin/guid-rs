@@ -1,5 +1,3 @@
-use std::os::unix::prelude::RawFd;
-
 #[derive(Debug)]
 pub struct BufferObject {
     handle: *const crate::ffi::GbmBufferObject,
@@ -22,12 +20,9 @@ impl BufferObject {
     //     }
     // }
 
-    pub(crate) fn get_fb(&self, device: &crate::Device) -> RawFd {
+    pub(crate) fn get_fb(&self, device: &crate::Device) -> libc::c_int {
         match unsafe { crate::ffi::gbm_bo_get_user_data(self.handle) } {
             user_data if user_data == std::ptr::null() => {
-                let device_fb = unsafe { crate::ffi::gbm_device_get_fd(device.get_handle_raw()) };
-                println!("device_fb: {:#?}", device_fb);
-
                 let width = unsafe { crate::ffi::gbm_bo_get_width(self.handle) };
                 let height = unsafe { crate::ffi::gbm_bo_get_height(self.handle) };
                 let pixel_format = unsafe { crate::ffi::gbm_bo_get_format(self.handle) };
@@ -46,29 +41,16 @@ impl BufferObject {
                     offsets
                         .push(unsafe { crate::ffi::gbm_bo_get_offset(self.handle, plane_index) });
                 }
-                let flags = 0;
-
-                println!(
-                    "width: {:?}, height: {:?}, pixel_format: {:?}, plane_count: {:?}",
-                    width, height, pixel_format, plane_count
-                );
-
-                println!("strides: {:#?}", strides);
-                println!("handles: {:#?}", handles);
-                println!("handles: {:#?}", offsets);
-
                 let fb = drm::get_fb2(
-                    device_fb,
+                    unsafe { crate::ffi::gbm_device_get_fd(device.get_handle_raw()) },
                     width,
                     height,
                     pixel_format as _,
                     handles.as_ptr(),
                     strides.as_ptr(),
                     offsets.as_ptr(),
-                    flags,
+                    0,
                 );
-
-                println!("r: {:#x?}", fb);
                 unsafe {
                     crate::ffi::gbm_bo_set_user_data(
                         self.handle,
@@ -90,15 +72,15 @@ extern "C" fn destroy_user_data_callback(
     println!("destroy_user_data_callback bo: {:?} data: {:?}", bo, data);
 }
 
-impl Drop for BufferObject {
-    fn drop(&mut self) {
-        unsafe {
-            if self.handle as u32 == 0 {
-                println!("Err");
-                return;
-            }
-            crate::ffi::gbm_bo_destroy(self.handle);
-            println!("BufferObject: {:?} droped", self.handle);
-        }
-    }
-}
+// impl Drop for BufferObject {
+//     fn drop(&mut self) {
+//         unsafe {
+//             if self.handle as u32 == 0 {
+//                 println!("Err");
+//                 return;
+//             }
+//             crate::ffi::gbm_bo_destroy(self.handle);
+//             println!("BufferObject: {:?} droped", self.handle);
+//         }
+//     }
+// }

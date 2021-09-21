@@ -41,6 +41,10 @@ impl Connector {
         }
     }
 
+    pub fn get_id(&self) -> libc::c_uint {
+        self.connector_id
+    }
+
     pub fn get_connection_status(&self) -> crate::def::ConnectionStatus {
         self.connection_status
     }

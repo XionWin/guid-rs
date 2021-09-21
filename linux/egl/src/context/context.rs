@@ -43,10 +43,11 @@ impl Context {
     }
 
     pub fn initialize(&mut self) {
-        unsafe {
-            let r = crate::ffi::eglSwapBuffers(self.display, self.surface);
-            println!("rrrrr: {:?}", r);
-        }
+        let drm_fd = self.gbm.get_drm().get_fd();
+        let drm_crtc_id = self.gbm.get_drm().get_crtc().get_id();
+        let drm_connector_ids = &vec![self.gbm.get_drm().get_connector().get_id()];
+        let drm_mode = self.gbm.get_drm().get_mode().get_handle();
+
         let surface = self.gbm.get_surface_mut();
 
         let display_handle = self.display;
@@ -54,13 +55,50 @@ impl Context {
 
         let func = |display: *const std::ffi::c_void, surface: *const std::ffi::c_void| {
             unsafe {
-                let swap_result = crate::ffi::eglSwapBuffers(display as _, surface as _);
-                println!("swap_callback: {:?}", swap_result);
-
+                crate::ffi::eglSwapBuffers(display as _, surface as _)
              }
         };
         surface.register_swap_callback((func, display_handle as _, surface_handle as _));
-        surface.initialize();
+
+        surface.initialize((drm_fd, drm_crtc_id, drm_connector_ids, drm_mode), |params, bo, fb| {
+            let (drm_fd, drm_crtc_id, drm_connector_ids, drm_mode) = params;
+            let r = drm::set_crtc(drm_fd, drm_crtc_id, fb as _, 0, 0, drm_connector_ids.as_ptr(), drm_connector_ids.len() as _, drm_mode);
+            println!("surface initialize set_crtc: {:?}", r);
+        });
+    }
+
+    pub fn render(&mut self) {
+        let drm_fd = self.gbm.get_drm().get_fd();
+        let drm_crtc_id = self.gbm.get_drm().get_crtc().get_id();
+        let drm_connector_ids = &vec![self.gbm.get_drm().get_connector().get_id()];
+        let drm_mode = self.gbm.get_drm().get_mode().get_handle();
+
+        loop {
+
+            unsafe {
+                crate::context::gl::glClearColor(1.0, 1.0, 1.0, 1.0);
+                crate::context::gl::glClear(0x00004000);
+            }
+
+            let surface = self.gbm.get_surface_mut();
+            
+
+            let display_handle = self.display;
+            let surface_handle = self.surface;
+
+            let func = |display: *const std::ffi::c_void, surface: *const std::ffi::c_void| {
+                unsafe {
+                    crate::ffi::eglSwapBuffers(display as _, surface as _)
+                }
+            };
+            surface.register_swap_callback((func, display_handle as _, surface_handle as _));
+
+            surface.swap_buffer((drm_fd, drm_crtc_id, drm_connector_ids, drm_mode), |params, bo, fb| {
+                let (drm_fd, drm_crtc_id, drm_connector_ids, drm_mode) = params;
+                let r = drm::set_crtc(drm_fd, drm_crtc_id, fb as _, 0, 0, drm_connector_ids.as_ptr(), drm_connector_ids.len() as _, drm_mode);
+                println!("surface initialize set_crtc: {:?}", r);
+            });
+        }
     }
 
 }

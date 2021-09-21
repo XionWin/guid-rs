@@ -44,7 +44,7 @@ pub fn get_fb2(
     strides: *const libc::c_uint,
     offsets: *const libc::c_uint,
     flags: libc::c_uint,
-) -> RawFd {
+) -> libc::c_int {
     unsafe {
         let mut buf_id = 0;
         match crate::ffi::drmModeAddFB2(
