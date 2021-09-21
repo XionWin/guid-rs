@@ -1,5 +1,3 @@
-use std::os::unix::prelude::RawFd;
-
 use crate::BufferObject;
 
 #[derive(Debug)]
@@ -18,7 +16,7 @@ impl Surface {
                 crate::ffi::gbm_surface_create(device.get_handle_raw(), width, height, format, flags)
             },
             device,
-            swap_callback: (|a, b|{}, std::ptr::null(), std::ptr::null()),
+            swap_callback: (|_, _|{}, std::ptr::null(), std::ptr::null()),
             bo_handle: std::ptr::null(),
         }
     }
@@ -28,7 +26,7 @@ impl Surface {
                 crate::ffi::gbm_surface_create_with_modifiers(device.get_handle_raw(), width, height, format, modifiers.as_ptr() as *const _, modifiers.len() as _)
             },
             device,
-            swap_callback: (|a, b|{}, std::ptr::null(), std::ptr::null()),
+            swap_callback: (|_, _|{}, std::ptr::null(), std::ptr::null()),
             bo_handle: std::ptr::null(),
         }
     }

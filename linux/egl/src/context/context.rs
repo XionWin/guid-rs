@@ -54,8 +54,9 @@ impl Context {
 
         let func = |display: *const std::ffi::c_void, surface: *const std::ffi::c_void| {
             unsafe {
-                println!("123 go go go");
-                let r = crate::ffi::eglSwapBuffers(display as _, surface as _);
+                let swap_result = crate::ffi::eglSwapBuffers(display as _, surface as _);
+                println!("swap_callback: {:?}", swap_result);
+
              }
         };
         surface.register_swap_callback((func, display_handle as _, surface_handle as _));

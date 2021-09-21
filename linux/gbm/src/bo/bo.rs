@@ -10,30 +10,17 @@ impl BufferObject {
         Self { handle }
     }
 
-    pub fn create(
-        handle: *const crate::ffi::GbmDevice,
-        width: libc::c_uint,
-        height: libc::c_uint,
-        format: crate::def::SurfaceFormat,
-        flags: crate::def::SurfaceFlags,
-    ) -> Self {
-        Self {
-            handle: unsafe { crate::ffi::gbm_bo_create(handle, width, height, format, flags) },
-        }
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn get_handle(&self) -> crate::ffi::GbmBufferObjectHandle {
-        unsafe { crate::ffi::gbm_bo_get_handle(self.handle) }
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn get_handle_for_plane(
-        &self,
-        plane: libc::c_int,
-    ) -> crate::ffi::GbmBufferObjectHandle {
-        unsafe { crate::ffi::gbm_bo_get_handle_for_plane(self.handle, plane) }
-    }
+    // pub fn create(
+    //     handle: *const crate::ffi::GbmDevice,
+    //     width: libc::c_uint,
+    //     height: libc::c_uint,
+    //     format: crate::def::SurfaceFormat,
+    //     flags: crate::def::SurfaceFlags,
+    // ) -> Self {
+    //     Self {
+    //         handle: unsafe { crate::ffi::gbm_bo_create(handle, width, height, format, flags) },
+    //     }
+    // }
 
     pub(crate) fn get_fb(&self, device: &crate::Device) -> RawFd {
         match unsafe { crate::ffi::gbm_bo_get_user_data(self.handle) } {
@@ -85,7 +72,7 @@ impl BufferObject {
                 unsafe {
                     crate::ffi::gbm_bo_set_user_data(
                         self.handle,
-                        std::ptr::null(),
+                        fb as _,
                         destroy_user_data_callback,
                     );
                 }
@@ -100,6 +87,7 @@ extern "C" fn destroy_user_data_callback(
     bo: *const crate::ffi::GbmBufferObject,
     data: *const std::ffi::c_void,
 ) {
+    println!("destroy_user_data_callback bo: {:?} data: {:?}", bo, data);
 }
 
 impl Drop for BufferObject {
