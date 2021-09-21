@@ -1,5 +1,5 @@
 use std::{ffi::CStr, vec};
-use crate::ffi::{EglDisplay, EglConfig, EglContext, EGLNativeWindowType, EglSurface};
+use crate::ffi::{EGLNativeWindowType, EglConfig, EglContext, EglDisplay, EglSurface};
 
 const EGL_PLATFORM_GBM_KHR: libc::c_uint = 0x31D7;
 
@@ -46,7 +46,7 @@ pub(crate) fn egl_initialize(display: EglDisplay) -> (libc::c_int, libc::c_int) 
     (major, minor)
 }
 
-pub(crate) fn get_config(display: EglDisplay) -> crate::ffi::EglConfig {
+pub(crate) fn get_config(display: EglDisplay) -> EglConfig {
     match get_extensions_by_display(display) {
         Some(extensions) if !extensions.contains("EGL_EXT_image_dma_buf_import_modifiers") => {
             panic!("Can't get \"EGL_EXT_image_dma_buf_import_modifiers\" in extensions")
@@ -77,14 +77,13 @@ pub(crate) fn get_config(display: EglDisplay) -> crate::ffi::EglConfig {
         crate::def::Definition::NONE,
     ];
     let size = get_egl_config_count(display, (&desired_config).as_ptr() as _);
-    let mut configs = vec![0; size as _];
-    get_egl_config_by_count(display, &desired_config as _, &mut configs);
+    let configs = get_egl_configs(display, &desired_config as _, size as _);
     configs[0]
 }
 
 pub(crate) fn get_context(
     display: EglDisplay,
-    config: crate::ffi::EglConfig,
+    config: EglConfig,
     attrib_list: *const libc::c_int,
 ) -> EglContext {
     get_egl_context(display, config, attrib_list)
@@ -92,7 +91,7 @@ pub(crate) fn get_context(
 
 pub(crate) fn get_surface(
     display: EglDisplay,
-    config: crate::ffi::EglConfig,
+    config: EglConfig,
     gbm: &gbm::Gbm,
 ) -> EglSurface {
     get_egl_surface(display, config, gbm.get_surface().get_handle() as _)
@@ -144,7 +143,7 @@ pub(crate) fn get_egl_config_count(
     let mut num_configs = 0;
 
     match unsafe {
-        crate::ffi::eglChooseConfig(display, desired_config, 0 as _, 0, &mut num_configs)
+        crate::ffi::eglChooseConfig(display, desired_config, std::ptr::null(), 0, &mut num_configs)
     } {
         true if num_configs == 0 => {
             panic!("No matched eglConfig");
@@ -157,18 +156,19 @@ pub(crate) fn get_egl_config_count(
     num_configs as _
 }
 
-pub(crate) fn get_egl_config_by_count(
+pub(crate) fn get_egl_configs(
     display: EglDisplay,
     desired_config: *const libc::c_int,
-    configs: &mut Vec<crate::ffi::EglConfig>,
-) {
+    count: libc::c_int,
+) -> Vec<EglConfig> {
     let mut num_configs = 0;
 
+    let configs = vec![std::ptr::null(), count as _];
     match unsafe {
         crate::ffi::eglChooseConfig(
             display,
             desired_config,
-            configs.as_mut_ptr() as _,
+            configs.as_ptr() as _,
             configs.len() as _,
             &mut num_configs,
         )
@@ -179,7 +179,7 @@ pub(crate) fn get_egl_config_by_count(
         false => {
             panic!("eglChooseConfig error");
         }
-        _ => { /* expected, do nothing */ }
+        _ => { configs }
     }
 }
 

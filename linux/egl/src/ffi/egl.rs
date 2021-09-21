@@ -1,6 +1,9 @@
 #[repr(C)]
 pub struct EglDisplayRaw {} 
 #[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct EglConfigRaw {} 
+#[repr(C)]
 pub struct EglContextRaw {} 
 #[repr(C)]
 pub struct EGLNativeWindowTypeRaw {} 
@@ -8,7 +11,7 @@ pub struct EGLNativeWindowTypeRaw {}
 pub struct EglSurfaceRaw {} 
 
 pub type EglDisplay = *const EglDisplayRaw;
-pub type EglConfig = libc::c_int;
+pub type EglConfig = *const EglConfigRaw;
 pub type EglContext = *const EglContextRaw;
 pub type EGLNativeWindowType = *const EGLNativeWindowTypeRaw;
 pub type EglSurface = *const EglSurfaceRaw;
@@ -22,7 +25,7 @@ extern "C" {
     pub fn eglInitialize(display: EglDisplay, major: *mut libc::c_int, minor: *mut libc::c_int) -> bool;
     pub fn eglBindAPI(api: crate::def::RenderAPI) -> bool;
 
-    pub fn eglChooseConfig(display: EglDisplay, attrib_list: *const libc::c_int, configs: *mut EglConfig, config_size: libc::c_int, num_config: *mut libc::c_int) -> bool;
+    pub fn eglChooseConfig(display: EglDisplay, attrib_list: *const libc::c_int, configs: EglConfig, config_size: libc::c_int, num_config: *mut libc::c_int) -> bool;
     pub fn eglCreateContext(display: EglDisplay, config: EglConfig, share_context: EglContext, attrib_list: *const libc::c_int) -> EglContext;
 
     pub fn eglCreateWindowSurface(display: EglDisplay, config: EglConfig, native_window: EGLNativeWindowType, attrib_list: *const libc::c_int) -> EglSurface;
