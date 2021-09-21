@@ -1,8 +1,7 @@
 use std::os::unix::prelude::RawFd;
 
 #[derive(Debug)]
-pub struct Framebuffer
-{
+pub struct Framebuffer {
     handle: *const crate::ffi::DrmFramebuffer,
     fb_id: libc::c_uint,
     width: libc::c_uint,
@@ -11,7 +10,6 @@ pub struct Framebuffer
     bpp: libc::c_uint,
     depth: libc::c_uint,
     /* driver specific handle */
-    handle_: libc::c_uint,
 }
 
 impl Framebuffer {
@@ -24,7 +22,6 @@ impl Framebuffer {
             pitch: fb.pitch,
             bpp: fb.bpp,
             depth: fb.depth,
-            handle_: fb.handle,
         }
     }
 }
@@ -38,15 +35,31 @@ impl Drop for Framebuffer {
     }
 }
 
-pub fn get_fb2(fd: RawFd, width: libc::c_uint, height: libc::c_uint,
-    pixel_format: libc::c_uint, bo_handles: *const libc::c_uint,
-    strides: *const libc::c_uint, offsets: *const libc::c_uint,
-    flags: libc::c_uint) -> libc::c_uint {
-        unsafe {
-            let mut buf_id = 0u32;
-            match crate::ffi::drmModeAddFB2(fd, width, height, pixel_format, bo_handles, strides, offsets, &mut buf_id, flags) {
-                r if r == 0 => buf_id,
-                _ => panic!("[DRM] drmModeAddFB2 failed")
-            }
+pub fn get_fb2(
+    fd: RawFd,
+    width: libc::c_uint,
+    height: libc::c_uint,
+    pixel_format: libc::c_uint,
+    bo_handles: *const libc::c_uint,
+    strides: *const libc::c_uint,
+    offsets: *const libc::c_uint,
+    flags: libc::c_uint,
+) -> RawFd {
+    unsafe {
+        let mut buf_id = 0;
+        match crate::ffi::drmModeAddFB2(
+            fd,
+            width,
+            height,
+            pixel_format,
+            bo_handles,
+            strides,
+            offsets,
+            &mut buf_id,
+            flags,
+        ) {
+            r if r == 0 => buf_id,
+            _ => panic!("[DRM] drmModeAddFB2 failed"),
         }
     }
+}

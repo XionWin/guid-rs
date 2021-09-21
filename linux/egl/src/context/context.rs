@@ -47,7 +47,21 @@ impl Context {
             let r = crate::ffi::eglSwapBuffers(self.display, self.surface);
             println!("rrrrr: {:?}", r);
         }
-        self.gbm.get_surface_mut().initialize();
+        let surface = self.gbm.get_surface_mut();
+
+        let display_handle = self.display;
+        let surface_handle = self.surface;
+
+        let func = |display: *const std::ffi::c_void, surface: *const std::ffi::c_void| {
+            unsafe {
+                println!("123 go go go");
+                let r = crate::ffi::eglSwapBuffers(display as _, surface as _);
+             }
+        };
+        surface.register_swap_callback((func, display_handle as _, surface_handle as _));
+        surface.initialize();
     }
 
 }
+
+

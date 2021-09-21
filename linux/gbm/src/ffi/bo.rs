@@ -24,7 +24,7 @@ extern "C" {
     pub fn gbm_bo_get_handle_for_plane(handle: *const GbmBufferObject, plane: libc::c_int) -> GbmBufferObjectHandle;
     pub fn gbm_bo_get_handle(handle: *const GbmBufferObject) -> GbmBufferObjectHandle;
 
-    pub fn gbm_bo_get_user_data(handle: *const GbmBufferObject) -> *const GbmUserData;
+    pub fn gbm_bo_get_user_data(handle: *const GbmBufferObject) -> *const std::ffi::c_void;
     pub fn gbm_bo_get_plane_count(handle: *const GbmBufferObject) -> libc::c_int;
 
     
@@ -36,7 +36,7 @@ extern "C" {
     pub fn gbm_bo_get_stride_for_plane(handle: *const GbmBufferObject, plane: libc::c_int) -> libc::c_uint;
     pub fn gbm_bo_get_offset(handle: *const GbmBufferObject, plane: libc::c_int) -> libc::c_uint;
 
-    pub fn gbm_bo_set_user_data(handle: *const GbmBufferObject, data: *const std::ffi::c_void, callback: *const fn(*const GbmBufferObject, *const std::ffi::c_void));
+    pub fn gbm_bo_set_user_data(handle: *const GbmBufferObject, data: *const std::ffi::c_void, callback: extern "C" fn(*const GbmBufferObject, *const std::ffi::c_void));
 
 
     pub fn gbm_bo_destroy(handle: *const GbmBufferObject);
