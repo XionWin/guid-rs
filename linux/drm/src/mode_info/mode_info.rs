@@ -1,6 +1,6 @@
 use std::{ffi::CStr};
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct ModeInfo {
     handle: *const crate::ffi::DrmModeInfo,
     clock: libc::c_uint,
