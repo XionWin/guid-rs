@@ -19,7 +19,7 @@ fn main() {
     println!("{:#?}", gbm);
 
     for surface_format in gbm::def::SurfaceFormat::iter() {
-        if gbm.get_device().is_format_supported(surface_format, gbm::def::SurfaceFlags::Linear) {
+        if gbm.get_surface().get_device().is_format_supported(surface_format, gbm::def::SurfaceFlags::Linear) {
             println!("{:?}", surface_format);
         } 
     }

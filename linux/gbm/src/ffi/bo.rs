@@ -27,5 +27,17 @@ extern "C" {
     pub fn gbm_bo_get_user_data(handle: *const GbmBufferObject) -> *const GbmUserData;
     pub fn gbm_bo_get_plane_count(handle: *const GbmBufferObject) -> libc::c_int;
 
+    
+    pub fn gbm_bo_get_width(handle: *const GbmBufferObject) -> libc::c_uint;
+    pub fn gbm_bo_get_height(handle: *const GbmBufferObject) -> libc::c_uint;
+    pub fn gbm_bo_get_stride(handle: *const GbmBufferObject) -> libc::c_uint;
+    pub fn gbm_bo_get_format(handle: *const GbmBufferObject) -> crate::def::SurfaceFormat;
+    pub fn gbm_bo_get_modifier(handle: *const GbmBufferObject) -> libc::c_ulonglong;
+    pub fn gbm_bo_get_stride_for_plane(handle: *const GbmBufferObject, plane: libc::c_int) -> libc::c_uint;
+    pub fn gbm_bo_get_offset(handle: *const GbmBufferObject, plane: libc::c_int) -> libc::c_uint;
+
+    pub fn gbm_bo_set_user_data(handle: *const GbmBufferObject, data: *const std::ffi::c_void, callback: *const fn(*const GbmBufferObject, *const std::ffi::c_void));
+
+
     pub fn gbm_bo_destroy(handle: *const GbmBufferObject);
 }

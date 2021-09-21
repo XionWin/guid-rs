@@ -15,7 +15,7 @@ pub(crate) fn get_display(gbm: &gbm::Gbm) -> EglDisplay {
         Some(extensions) if extensions.contains("EGL_EXT_platform_base") => {
             get_egl_get_platform_display_ext_func("eglGetPlatformDisplayEXT")(
                 EGL_PLATFORM_GBM_KHR,
-                gbm.get_device().get_handle(),
+                gbm.get_surface().get_device().get_handle(),
                 std::ptr::null(),
             )
         }

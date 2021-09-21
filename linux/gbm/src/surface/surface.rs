@@ -5,29 +5,36 @@ use crate::BufferObject;
 #[derive(Debug)]
 pub struct Surface {
     pub(crate) handle: *const crate::ffi::GbmSurface,
+    device: crate::Device,
     swap_callback: fn(),
 
     bo_handle: *const crate::ffi::GbmBufferObject,
 }
 
 impl Surface {
-    pub fn new(device: &crate::Device, width: libc::c_int, height: libc::c_int, format: crate::def::SurfaceFormat, flags: crate::def::SurfaceFlags) -> Self {
+    pub fn new(device: crate::Device, width: libc::c_int, height: libc::c_int, format: crate::def::SurfaceFormat, flags: crate::def::SurfaceFlags) -> Self {
         Self {
             handle: unsafe {
                 crate::ffi::gbm_surface_create(device.get_handle_raw(), width, height, format, flags)
             },
+            device,
             swap_callback: ||{},
             bo_handle: std::ptr::null(),
         }
     }
-    pub fn new_with_modifiers(device: &crate::Device, width: libc::c_int, height: libc::c_int, format: crate::def::SurfaceFormat, modifiers: &[crate::def::FormatModifier]) -> Self {
+    pub fn new_with_modifiers(device: crate::Device, width: libc::c_int, height: libc::c_int, format: crate::def::SurfaceFormat, modifiers: &[crate::def::FormatModifier]) -> Self {
         Self {
             handle: unsafe {
                 crate::ffi::gbm_surface_create_with_modifiers(device.get_handle_raw(), width, height, format, modifiers.as_ptr() as *const _, modifiers.len() as _)
             },
+            device,
             swap_callback: ||{},
             bo_handle: std::ptr::null(),
         }
+    }
+    
+    pub fn get_device(&self) -> &crate::Device {
+        &self.device
     }
 
     pub fn get_handle(&self) -> libc::c_int {
@@ -42,8 +49,15 @@ impl Surface {
         // (self.swap_callback)();
         
         self.bo_handle = unsafe { crate::ffi::gbm_surface_lock_front_buffer(self.handle) };
+
         
         println!("e {:?}", self.bo_handle);
+
+        let bo = BufferObject::new(self.bo_handle);
+        println!("e {:?}", bo);
+        bo.get_fb(&self.device);
+
+        
     }
 }
 
