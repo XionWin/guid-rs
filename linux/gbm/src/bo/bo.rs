@@ -58,6 +58,7 @@ impl BufferObject {
                         destroy_user_data_callback,
                     );
                 }
+                println!("get_fb: {:#x?}", fb);
                 fb
             }
             user_data => user_data as _,

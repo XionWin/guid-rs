@@ -60,7 +60,7 @@ impl Context {
         };
         surface.register_swap_callback((func, display_handle as _, surface_handle as _));
 
-        surface.initialize((drm_fd, drm_crtc_id, drm_connector_ids, drm_mode), |params, bo, fb| {
+        surface.initialize((drm_fd, drm_crtc_id, drm_connector_ids, drm_mode), |params, _bo, fb| {
             let (drm_fd, drm_crtc_id, drm_connector_ids, drm_mode) = params;
             let r = drm::set_crtc(drm_fd, drm_crtc_id, fb as _, 0, 0, drm_connector_ids.as_ptr(), drm_connector_ids.len() as _, drm_mode);
             println!("surface initialize set_crtc: {:?}", r);
@@ -68,36 +68,28 @@ impl Context {
     }
 
     pub fn render(&mut self) {
-        let drm_fd = self.gbm.get_drm().get_fd();
-        let drm_crtc_id = self.gbm.get_drm().get_crtc().get_id();
-        let drm_connector_ids = &vec![self.gbm.get_drm().get_connector().get_id()];
-        let drm_mode = self.gbm.get_drm().get_mode().get_handle();
+        let surface = self.gbm.get_surface_mut();
+        let mut counter = 9u64;
 
+        let mut last_tick = std::time::SystemTime::now();
         loop {
-
             unsafe {
-                crate::context::gl::glClearColor(1.0, 1.0, 1.0, 1.0);
+                crate::context::gl::glClearColor(counter as f32 % 255f32 / 255f32, counter as f32 % 255f32 / 255f32, counter as f32 % 255f32 / 255f32, 1.0);
                 crate::context::gl::glClear(0x00004000);
             }
+            surface.swap_buffer();
 
-            let surface = self.gbm.get_surface_mut();
-            
+            counter += 1;
 
-            let display_handle = self.display;
-            let surface_handle = self.surface;
-
-            let func = |display: *const std::ffi::c_void, surface: *const std::ffi::c_void| {
-                unsafe {
-                    crate::ffi::eglSwapBuffers(display as _, surface as _)
+            match last_tick.elapsed() {
+                Ok(elapsed) if elapsed.as_secs() > 1 => {
+                    let fps = counter as f64 / elapsed.as_millis() as f64 * 1000f64;
+                    println!("fps: {:?}", fps);
+                    counter = 0;
+                    last_tick = std::time::SystemTime::now();
                 }
-            };
-            surface.register_swap_callback((func, display_handle as _, surface_handle as _));
-
-            surface.swap_buffer((drm_fd, drm_crtc_id, drm_connector_ids, drm_mode), |params, bo, fb| {
-                let (drm_fd, drm_crtc_id, drm_connector_ids, drm_mode) = params;
-                let r = drm::set_crtc(drm_fd, drm_crtc_id, fb as _, 0, 0, drm_connector_ids.as_ptr(), drm_connector_ids.len() as _, drm_mode);
-                println!("surface initialize set_crtc: {:?}", r);
-            });
+                _ => {}
+            }
         }
     }
 

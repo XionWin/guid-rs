@@ -33,6 +33,5 @@ extern "C" {
 
     pub fn gbm_bo_set_user_data(handle: *const GbmBufferObject, data: *const std::ffi::c_void, callback: extern "C" fn(*const GbmBufferObject, *const std::ffi::c_void));
 
-
-    pub fn gbm_bo_destroy(handle: *const GbmBufferObject);
+    // pub fn gbm_bo_destroy(handle: *const GbmBufferObject);
 }
