@@ -1,14 +1,14 @@
 use std::{ffi::CStr, vec};
-use crate::ffi::{EglDisplay, EglConfig, EglContext, EglSurface};
+use crate::ffi::{EglDisplay, EglConfig, EglContext, EGLNativeWindowType, EglSurface};
 
 const EGL_PLATFORM_GBM_KHR: libc::c_uint = 0x31D7;
 
 pub(crate) fn get_display(gbm: &gbm::Gbm) -> EglDisplay {
-    let version = get_version_by_display(0x0);
+    let version = get_version_by_display(std::ptr::null());
     println!("version: {:?}", version);
-    let vendor = get_vendor_by_display(0x0);
+    let vendor = get_vendor_by_display(std::ptr::null());
     println!("vendor: {:?}", vendor);
-    let extensions = get_extensions_by_display(0x0);
+    let extensions = get_extensions_by_display(std::ptr::null());
     println!("extensions: {:?}", extensions);
 
     let display = match extensions {
@@ -28,7 +28,7 @@ pub(crate) fn get_display(gbm: &gbm::Gbm) -> EglDisplay {
     };
 
     match display {
-        0 => panic!("[EGL] GetDisplay failed.: {:?}", unsafe {
+        display if display.is_null() => panic!("[EGL] GetDisplay failed.: {:?}", unsafe {
             crate::ffi::eglGetError()
         }),
         display => display,
@@ -76,7 +76,7 @@ pub(crate) fn get_config(display: EglDisplay) -> crate::ffi::EglConfig {
         0,
         crate::def::Definition::NONE,
     ];
-    let size = get_egl_config_count(display, &desired_config as _);
+    let size = get_egl_config_count(display, (&desired_config).as_ptr() as _);
     let mut configs = vec![0; size as _];
     get_egl_config_by_count(display, &desired_config as _, &mut configs);
     configs[0]
@@ -113,11 +113,11 @@ pub(crate) fn egl_make_current(
 pub(crate) fn get_egl_surface(
     display: EglDisplay,
     config: EglConfig,
-    native_wnd_handle: libc::c_uint,
+    native_wnd_handle: EGLNativeWindowType,
 ) -> EglSurface {
     match unsafe { crate::ffi::eglCreateWindowSurface(display, config, native_wnd_handle, 0 as _) }
     {
-        handle if handle == 0 => panic!("[EGL] Failed to create egl surface, error {:?}", unsafe {
+        handle if handle.is_null() => panic!("[EGL] Failed to create egl surface, error {:?}", unsafe {
             crate::ffi::eglGetError()
         }),
         handle => handle,
@@ -130,7 +130,7 @@ pub(crate) fn get_egl_context(
     attrib_list: *const libc::c_int,
 ) -> EglContext {
     match unsafe { crate::ffi::eglCreateContext(display, config, 0 as _, attrib_list) } {
-        handle if handle == 0 => panic!("[EGL] Failed to create egl context, error {:?}", unsafe {
+        handle if handle.is_null() => panic!("[EGL] Failed to create egl context, error {:?}", unsafe {
             crate::ffi::eglGetError()
         }),
         handle => handle,
@@ -194,7 +194,7 @@ pub(crate) fn bind_egl_api(render_api: crate::def::RenderAPI) {
 
 pub(crate) fn get_egl_get_platform_display_ext_func(
     func_name: &str,
-) -> extern "C" fn(libc::c_uint, libc::c_uint, *const libc::c_uint) -> libc::c_uint {
+) -> extern "C" fn(libc::c_uint, libc::c_uint, *const libc::c_uint) -> EglDisplay {
     let mut func_name = String::from(func_name)
         .bytes()
         .collect::<Vec<libc::c_char>>();

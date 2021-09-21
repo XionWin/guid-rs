@@ -1,15 +1,24 @@
-pub type EglDisplay = libc::c_uint;
-pub type EglConfig = libc::c_uint;
-pub type EglContext = libc::c_uint;
-pub type EGLNativeWindowType = libc::c_uint;
-pub type EglSurface = libc::c_uint;
+#[repr(C)]
+pub struct EglDisplayRaw {} 
+#[repr(C)]
+pub struct EglContextRaw {} 
+#[repr(C)]
+pub struct EGLNativeWindowTypeRaw {} 
+#[repr(C)]
+pub struct EglSurfaceRaw {} 
+
+pub type EglDisplay = *const EglDisplayRaw;
+pub type EglConfig = libc::c_int;
+pub type EglContext = *const EglContextRaw;
+pub type EGLNativeWindowType = *const EGLNativeWindowTypeRaw;
+pub type EglSurface = *const EglSurfaceRaw;
 
 #[link(name = "EGL")]
 #[allow(improper_ctypes)]
 extern "C" {
     pub fn eglGetError() -> crate::def::ErrorCode;
     pub fn eglQueryString(display: EglDisplay, name: libc::c_int) -> libc::c_uint;
-    pub fn eglGetProcAddress(func_name: *const libc::c_char) -> *const fn(libc::c_uint, libc::c_uint, *const libc::c_uint) -> libc::c_uint;
+    pub fn eglGetProcAddress(func_name: *const libc::c_char) -> *const fn(libc::c_uint, libc::c_uint, *const libc::c_uint) -> EglDisplay;
     pub fn eglInitialize(display: EglDisplay, major: *mut libc::c_int, minor: *mut libc::c_int) -> bool;
     pub fn eglBindAPI(api: crate::def::RenderAPI) -> bool;
 
