@@ -44,14 +44,14 @@ impl Surface {
     }
 
     pub fn initialize(&mut self, params: (libc::c_int, libc::c_uint, &Vec<libc::c_uint>, *const std::ffi::c_void), action: fn(params: (libc::c_int, libc::c_uint, &Vec<libc::c_uint>, *const std::ffi::c_void), crate::BufferObject, libc::c_int)) {
-        self.initialize_lock(params, action);
+        self.lock(Some(params), Some(action));
     }
 
     pub fn swap_buffer(&mut self) {
-        self.lock();
+        self.lock::<i32>(None, None);
     }
 
-    pub fn initialize_lock(&mut self, params: (libc::c_int, libc::c_uint, &Vec<libc::c_uint>, *const std::ffi::c_void), action: fn(params: (libc::c_int, libc::c_uint, &Vec<libc::c_uint>, *const std::ffi::c_void), crate::BufferObject, libc::c_int)) {
+    pub fn lock<T>(&mut self, params: Option<T>, action: Option<fn(params: T, crate::BufferObject, libc::c_int)>) {
         self.swap();
 
         let last_bo_handle = self.bo_handle;
@@ -59,27 +59,18 @@ impl Surface {
             handle if handle == std::ptr::null() => panic!("[GBM]: Failed to lock front buffer"),
             handle => handle,
         };
-
-        let bo = BufferObject::new(self.bo_handle);
-        // println!("surface initialize bo {:?}", bo);
-        let fb = bo.get_fb(&self.device);
-        action(params, bo, fb);
-
-        if last_bo_handle != std::ptr::null() {
-            unsafe {
-                crate::ffi::gbm_surface_release_buffer(self.handle, last_bo_handle);
-            }
+        match params {
+            Some(params) => match action {
+                Some(action) => {
+                    let bo = BufferObject::new(self.bo_handle);
+                    // println!("surface initialize bo {:?}", bo);
+                    let fb = bo.get_fb(&self.device);
+                    action(params, bo, fb);
+                },
+                None => {},
+            },
+            None => {},
         }
-    }
-
-    pub fn lock(&mut self) {
-        self.swap();
-
-        let last_bo_handle = self.bo_handle;
-        self.bo_handle = match unsafe { crate::ffi::gbm_surface_lock_front_buffer(self.handle) } {
-            handle if handle == std::ptr::null() => panic!("[GBM]: Failed to lock front buffer"),
-            handle => handle,
-        };
 
         if last_bo_handle != std::ptr::null() {
             unsafe {

@@ -62,8 +62,14 @@ impl Context {
 
         surface.initialize((drm_fd, drm_crtc_id, drm_connector_ids, drm_mode), |params, _bo, fb| {
             let (drm_fd, drm_crtc_id, drm_connector_ids, drm_mode) = params;
-            let set_crtc_result = drm::set_crtc(drm_fd, drm_crtc_id, fb as _, 0, 0, drm_connector_ids.as_ptr(), drm_connector_ids.len() as _, drm_mode);
-            println!("surface initialize set_crtc: {:?}", set_crtc_result);
+            match drm::set_crtc(drm_fd, drm_crtc_id, fb as _, 0, 0, drm_connector_ids.as_ptr(), drm_connector_ids.len() as _, drm_mode) {
+                result if result == 0 => {
+                    println!("surface initialize set_crtc: {:?}", result);
+                    result
+                }
+                _ => panic!("surface initialize set_crtc error")
+            }
+           ;
         });
     }
 
