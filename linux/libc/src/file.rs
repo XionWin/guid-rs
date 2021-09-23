@@ -14,7 +14,7 @@ impl File {
         Self {
             path: str_path,
             fd: unsafe {
-                crate::ffi::open(path.as_ptr(), 3)
+                crate::ffi::open(path.as_ptr(), 2)
             }
         }
     }

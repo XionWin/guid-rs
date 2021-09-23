@@ -105,34 +105,20 @@ impl Surface {
             version: DRM_CONTEXT_VERSION,
             vblank_handler,
             page_flip_handler,
-            page_flip_handler2,
         };
 
         let mut user_data = 1;
-
-        println!(
-            "fd: {:?} crtc_id: {:?} fb: {:#x?} flags: {:?} user_data: {:?}",
-            fd, crtc_id, fb, flags, user_data
-        );
-
-        match drm::page_flip(
-            fd,
-            crtc_id,
-            fb as _,
-            flags,
-            &mut user_data as *mut libc::c_int as _,
-        ) {
+        match drm::page_flip( fd, crtc_id, fb as _, flags, &mut user_data as *mut libc::c_int as _) {
             result if result != 0 => panic!("page_flip error"),
             _ => {}
         }
 
         while user_data != 0 {
-            let r = drm::handle_event(fd, &evt_context);
+            let r = drm::handle_event(fd, &evt_context as *const _ as _);
             if r != 0 {
                 panic!("handle_event result: {:?}", r);
             }
         }
-        println!("234");
 
         if last_bo_handle != std::ptr::null() {
             unsafe {
@@ -192,32 +178,25 @@ impl Surface {
 pub const DRM_CONTEXT_VERSION: libc::c_int = 2;
 /**< Desired DRM event context version */
 
-extern "C" fn vblank_handler(
+extern fn vblank_handler(
     _fd: libc::c_int,
     _sequence: libc::c_uint,
     _tv_sec: libc::c_uint,
     _tv_usec: libc::c_uint,
     _user_data: *mut libc::c_void,
 ) {
-    println!("aaaa");
+    
 }
 
 /// Helper function for handling page flips.
-extern "C" fn page_flip_handler(
+extern fn page_flip_handler(
     _fd: libc::c_int,
     _sequence: libc::c_uint,
     _tv_sec: libc::c_uint,
     _tv_usec: libc::c_uint,
-    _user_data: *mut libc::c_void,
+    user_data: *mut libc::c_void,
 ) {
-    println!("aaaa");
-}
-extern "C" fn page_flip_handler2(
-    _fd: libc::c_int,
-    _sequence: libc::c_uint,
-    _tv_sec: libc::c_uint,
-    _tv_usec: libc::c_uint,
-    _user_data: *mut libc::c_void,
-) {
-    println!("aaaa");
+    unsafe {
+        *(user_data as *mut libc::c_int) = 0;
+    }
 }
