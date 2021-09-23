@@ -24,5 +24,5 @@ extern "C" {
         buf_id: *mut RawFd, flags: libc::c_uint) -> libc::c_int;
     
 
-    pub fn drmModeFreeFB(ptr: *const DrmFramebuffer);
+    // pub fn drmModeFreeFB(ptr: *const DrmFramebuffer);
 }

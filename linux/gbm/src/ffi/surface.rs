@@ -14,5 +14,5 @@ extern "C" {
     
     pub fn gbm_surface_release_buffer(handle: *const GbmSurface, bo: *const GbmBufferObject);
     pub fn gbm_surface_lock_front_buffer(handle: *const GbmSurface) -> *const GbmBufferObject;
-    pub fn gbm_surface_destroy(handle: *const GbmSurface);
+    // pub fn gbm_surface_destroy(handle: *const GbmSurface);
 }

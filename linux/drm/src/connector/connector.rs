@@ -54,14 +54,14 @@ impl Connector {
     }
 }
 
-impl Drop for Connector {
-    fn drop(&mut self) {
-        unsafe {
-            crate::ffi::drmModeFreeConnector(self.handle);
-            println!("Connector: {:?} droped", self.handle);
-        }
-    }
-}
+// impl Drop for Connector {
+//     fn drop(&mut self) {
+//         unsafe {
+//             crate::ffi::drmModeFreeConnector(self.handle);
+//             println!("Connector: {:?} droped", self.handle);
+//         }
+//     }
+// }
 
 fn get_modes(c: &crate::ffi::DrmConnector) -> Vec<crate::ModeInfo> {
     unsafe {std::slice::from_raw_parts(c.modes, c.count_modes as usize)}.iter().map(|x| {

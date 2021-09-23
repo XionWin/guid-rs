@@ -63,10 +63,7 @@ impl Context {
         surface.initialize((drm_fd, drm_crtc_id, drm_connector_ids, drm_mode), |params, _bo, fb| {
             let (drm_fd, drm_crtc_id, drm_connector_ids, drm_mode) = params;
             match drm::set_crtc(drm_fd, drm_crtc_id, fb as _, 0, 0, drm_connector_ids.as_ptr(), drm_connector_ids.len() as _, drm_mode) {
-                result if result == 0 => {
-                    println!("surface initialize set_crtc: {:?}", result);
-                    result
-                }
+                result if result == 0 => result,
                 _ => panic!("surface initialize set_crtc error")
             }
            ;
@@ -74,6 +71,9 @@ impl Context {
     }
 
     pub fn render(&mut self) {
+        let fd = self.gbm.get_drm().get_fd();
+        let crtc_id = self.gbm.get_drm().get_crtc().get_id();
+
         let surface = self.gbm.get_surface_mut();
         let mut counter = 9u64;
 
@@ -83,7 +83,7 @@ impl Context {
                 crate::context::gl::glClearColor(counter as f32 % 255f32 / 255f32, counter as f32 % 255f32 / 255f32, counter as f32 % 255f32 / 255f32, 1.0);
                 crate::context::gl::glClear(0x00004000);
             }
-            surface.swap_buffer();
+            surface.swap_buffers(fd, crtc_id, 0x01);
 
             counter += 1;
 

@@ -47,11 +47,11 @@ impl Resources {
 }
 
 
-impl Drop for Resources {
-    fn drop(&mut self) {
-        println!("Resources: {:?} droped", self.handle);
-    }
-}
+// impl Drop for Resources {
+//     fn drop(&mut self) {
+//         println!("Resources: {:?} droped", self.handle);
+//     }
+// }
 
 fn get_fbs(fd: RawFd, r: &crate::ffi::DrmResources) -> Vec<super::Framebuffer> {
     unsafe {

@@ -10,6 +10,8 @@ mod crtc;
 mod connector;
 mod encoder;
 mod fb;
+mod page;
+
 pub(crate) mod ffi;
 pub mod def;
 
@@ -21,5 +23,6 @@ pub use crtc::*;
 pub use connector::*;
 pub use encoder::*;
 pub use fb::*;
+pub use page::*;
 
 
