@@ -1,6 +1,7 @@
 [workspace]
 members = [
-    "guid",
+    "guid/app",
+    "guid/drawing",
     "linux/egl",
     "linux/gbm",
     "linux/drm",

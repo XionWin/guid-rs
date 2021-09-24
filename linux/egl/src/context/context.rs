@@ -69,48 +69,14 @@ impl Context {
         };
     }
 
-    pub fn render(&mut self) {
+    pub fn update(&mut self) {
         let fd = self.gbm.get_drm().get_fd();
         let crtc_id = self.gbm.get_drm().get_crtc().get_id();
 
         let surface = self.gbm.get_surface_mut();
-        let mut counter = 9u64;
-        let mut value = 9i64;
-        let mut direction = true;
-
-        let mut last_tick = std::time::SystemTime::now();
-        loop {
-            unsafe {
-                crate::context::gl::glClearColor(value as f32 / 255f32, value as f32 / 255f32, value as f32 / 255f32, 1.0);
-                crate::context::gl::glClear(0x00004000);
-            }
-            let (_, fb) = surface.lock();
-            if self.vertical_synchronization {
-                vertical_synchronization(fd, crtc_id, fb);
-            }
-
-            value += match direction {
-                true => 1,
-                false => -1,
-            };
-            match value {
-                v if v > 255 => direction = false,
-                v if v <= 0 => direction = true,
-                _ => {},
-            }
-
-            counter += 1;
-            
-
-            match last_tick.elapsed() {
-                Ok(elapsed) if elapsed.as_secs() > 1 => {
-                    let fps = counter as f64 / elapsed.as_millis() as f64 * 1000f64;
-                    println!("fps: {:?}", fps as u32);
-                    counter = 0;
-                    last_tick = std::time::SystemTime::now();
-                }
-                _ => {}
-            }
+        let (_, fb) = surface.lock();
+        if self.vertical_synchronization {
+            vertical_synchronization(fd, crtc_id, fb);
         }
     }
 
@@ -139,19 +105,13 @@ fn vertical_synchronization(fd: RawFd, crtc_id: libc::c_uint, fb: libc::c_uint) 
 
 
 const DRM_CONTEXT_VERSION: libc::c_int = 2;
-/**< Desired DRM event context version */
-
 extern fn vblank_handler(
     _fd: libc::c_int,
     _sequence: libc::c_uint,
     _tv_sec: libc::c_uint,
     _tv_usec: libc::c_uint,
     _user_data: *mut libc::c_void,
-) {
-    
-}
-
-/// Helper function for handling page flips.
+) {}
 extern fn page_flip_handler(
     _fd: libc::c_int,
     _sequence: libc::c_uint,
