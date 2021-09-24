@@ -1,12 +1,3 @@
-// #[repr(C)]
-// pub struct EventContext {
-//     pub version: libc::libc::c_int,
-//     pub vblank_handler: *const libc::c_void,
-//     pub page_flip_handler: *const libc::c_void,
-//     pub page_flip_handler2: *const libc::c_void,
-//     pub sequence_handler: *const libc::c_void,
-// }
-
 #[repr(C)]
 pub struct EventContext {
     pub version: libc::c_int,
