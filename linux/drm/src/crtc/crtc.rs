@@ -49,14 +49,14 @@ impl Crtc {
     }
 }
 
-// impl Drop for Crtc {
-//     fn drop(&mut self) {
-//         unsafe {
-//             crate::ffi::drmModeFreeCrtc(self.handle);
-//             println!("Crtc: {:?} droped", self.handle);
-//         }
-//     }
-// }
+impl Drop for Crtc {
+    fn drop(&mut self) {
+        unsafe {
+            crate::ffi::drmModeFreeCrtc(self.handle);
+            println!("Crtc: {:?} droped", self.handle);
+        }
+    }
+}
 
 pub fn set_crtc(
     fd: RawFd,

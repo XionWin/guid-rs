@@ -22,7 +22,7 @@ pub struct DrmCrtc {
 #[link(name = "drm")]
 extern "C" {
     pub fn drmModeGetCrtc(fd: RawFd, crtc_id: libc::c_uint) -> *const DrmCrtc;
-    // pub fn drmModeFreeCrtc(handle: *const DrmCrtc);
+    pub fn drmModeFreeCrtc(handle: *const DrmCrtc);
 
     pub fn drmModeSetCrtc(
         fd: RawFd,

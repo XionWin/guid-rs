@@ -29,11 +29,11 @@ impl Encoder {
     }
 }
 
-// impl Drop for Encoder {
-//     fn drop(&mut self) {
-//         unsafe {
-//             crate::ffi::drmModeFreeEncoder(self.handle);
-//             println!("Encoder: {:?} droped", self.handle);
-//         }
-//     }
-// }
+impl Drop for Encoder {
+    fn drop(&mut self) {
+        unsafe {
+            crate::ffi::drmModeFreeEncoder(self.handle);
+            println!("Encoder: {:?} droped", self.handle);
+        }
+    }
+}

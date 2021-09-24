@@ -29,11 +29,11 @@ impl Device {
     }
 }
 
-// impl Drop for Device {
-//     fn drop(&mut self) {
-//         unsafe {
-//             crate::ffi::gbm_device_destroy(self.handle);
-//             println!("Device: {:?} droped", self.handle);
-//         }
-//     }
-// }
+impl Drop for Device {
+    fn drop(&mut self) {
+        unsafe {
+            crate::ffi::gbm_device_destroy(self.handle);
+            println!("Device: {:?} droped", self.handle);
+        }
+    }
+}
