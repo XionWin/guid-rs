@@ -39,8 +39,8 @@ fn main() {
         let rgb: RGB = hsv.into();
         let (r, g, b) = rgb.into();
         unsafe {
-            egl::glClearColor(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 1.0);
-            egl::glClear(0x00004000);
+            gles::glClearColor(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
+            gles::glClear(0x00004000);
         }
         
         context.update();

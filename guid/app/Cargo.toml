@@ -11,3 +11,4 @@ drm={path="../../linux/drm"}
 gbm={path="../../linux/gbm"}
 egl={path="../../linux/egl"}
 drawing={path="../drawing"}
+gles={path="../../linux/openGL/gles"}

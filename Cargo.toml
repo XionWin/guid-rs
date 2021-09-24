@@ -2,6 +2,7 @@
 members = [
     "guid/app",
     "guid/drawing",
+    "linux/openGL/gles",
     "linux/egl",
     "linux/gbm",
     "linux/drm",

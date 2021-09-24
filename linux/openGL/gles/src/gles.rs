@@ -1,4 +1,3 @@
-
 #[link(name = "GLESv2")]
 #[allow(improper_ctypes)]
 extern "C" {
