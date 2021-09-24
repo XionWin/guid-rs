@@ -4,7 +4,7 @@ Guid is a little demonstration program for how to drive bare metal graphics with
 
 Library dependecies:
 
-libc (involved c languge data format support like: uint_32t c_void etc.)
+libc (involved c languge data format (like: uint_32t c_void etc.) for easier life.)
 
 bitflags (enhance rust to suport bit opration on a structured data, very similar with the Flag enum in C#)
 
