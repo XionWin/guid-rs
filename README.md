@@ -7,5 +7,7 @@ Library dependencies:
 2. **bitflags**: enhance rust to support bit operation on structured data, very similar to the Flag enum in C#
 
 ---
-
+## Tested on raspberry pi Raspbian lite with Waveshare AMOLED screen HDMI interface.
+![image_01](https://github.com/XionWin/guid-rs/blob/main/resource/image_01.jpg?raw=true)
+---
 ![DRM/KMS diagram](https://github.com/XionWin/guid-rs/blob/main/resource/Linux_graphics_drivers_DRI_Wayland.svg.png?raw=true)
