@@ -46,8 +46,8 @@ fn main() {
         context.update();
         
         value += match direction {
-            true => 1f32,
-            false => -1f32,
+            true => 0.8f32,
+            false => -0.8f32,
         };
 
         match value {
@@ -68,6 +68,4 @@ fn main() {
             _ => {}
         }
     }
-
-
 }
