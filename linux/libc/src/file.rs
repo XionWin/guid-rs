@@ -1,5 +1,16 @@
 use std::{os::unix::prelude::RawFd};
 
+bitflags! {
+    #[repr(C)]
+    pub struct OpenFlags: u32 {
+        const READ_ONLY = 0x0000;
+        const WRITE_ONLY = 0x0001;
+        const READ_WRITE = 0x0002;
+        const NON_BLOCK = 0x0800;
+        const CLOSE_ON_EXEC = 0x0080000;
+    }
+}
+
 #[derive(Debug)]
 pub struct File {
     path: String,
@@ -14,7 +25,7 @@ impl File {
         Self {
             path: str_path,
             fd: unsafe {
-                crate::ffi::open(path.as_ptr(), 2)
+                crate::ffi::open(path.as_ptr(), OpenFlags::READ_WRITE)
             }
         }
     }

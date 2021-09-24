@@ -76,21 +76,34 @@ impl Context {
 
         let surface = self.gbm.get_surface_mut();
         let mut counter = 9u64;
+        let mut value = 9u64;
+        let mut direction = true;
 
         let mut last_tick = std::time::SystemTime::now();
         loop {
             unsafe {
-                crate::context::gl::glClearColor(counter as f32 % 255f32 / 255f32, counter as f32 % 255f32 / 255f32, counter as f32 % 255f32 / 255f32, 1.0);
+                crate::context::gl::glClearColor(value as f32 / 255f32, value as f32 / 255f32, value as f32 / 255f32, 1.0);
                 crate::context::gl::glClear(0x00004000);
             }
-            surface.swap_buffers(fd, crtc_id, 0x01);
+            surface.swap_buffers(fd, crtc_id);
+
+            match direction {
+                true => value += 1,
+                false => value -= 1,
+            }
+            match value {
+                v if v > 255 => direction = false,
+                v if v <= 0 => direction = true,
+                _ => {},
+            }
 
             counter += 1;
+            
 
             match last_tick.elapsed() {
                 Ok(elapsed) if elapsed.as_secs() > 1 => {
                     let fps = counter as f64 / elapsed.as_millis() as f64 * 1000f64;
-                    println!("fps: {:?}", fps);
+                    println!("fps: {:?}", fps as u32);
                     counter = 0;
                     last_tick = std::time::SystemTime::now();
                 }

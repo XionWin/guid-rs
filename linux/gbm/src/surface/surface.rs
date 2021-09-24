@@ -89,7 +89,7 @@ impl Surface {
         self.lock(params, action);
     }
 
-    pub fn swap_buffers(&mut self, fd: RawFd, crtc_id: libc::c_uint, flags: libc::c_uint) {
+    pub fn swap_buffers(&mut self, fd: RawFd, crtc_id: libc::c_uint) {
         self.swap();
 
         let last_bo_handle = self.bo_handle;
@@ -108,7 +108,7 @@ impl Surface {
         };
 
         let mut user_data = 1;
-        match drm::page_flip( fd, crtc_id, fb as _, flags, &mut user_data as *mut libc::c_int as _) {
+        match drm::page_flip( fd, crtc_id, fb as _, drm::def::PageFlipFlags::FLIP_EVENT, &mut user_data as *mut libc::c_int as _) {
             result if result != 0 => panic!("page_flip error"),
             _ => {}
         }
@@ -153,6 +153,8 @@ impl Surface {
             panic!("surface swap error");
         }
     }
+
+    
 }
 
 // impl Drop for Surface {
