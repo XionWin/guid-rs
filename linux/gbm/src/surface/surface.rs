@@ -3,9 +3,9 @@ pub struct Surface {
     pub(crate) handle: *const crate::ffi::GbmSurface,
     device: crate::Device,
     swap_callback: (
-        fn(*const std::ffi::c_void, *const std::ffi::c_void) -> bool,
-        *const std::ffi::c_void,
-        *const std::ffi::c_void,
+        fn(*const libc::c_void, *const libc::c_void) -> bool,
+        *const libc::c_void,
+        *const libc::c_void,
     ),
 
     bo_handle: *const crate::ffi::GbmBufferObject,
@@ -69,15 +69,15 @@ impl Surface {
     pub fn register_swap_callback(
         &mut self,
         swap_callback: (
-            fn(*const std::ffi::c_void, *const std::ffi::c_void) -> bool,
-            *const std::ffi::c_void,
-            *const std::ffi::c_void,
+            fn(*const libc::c_void, *const libc::c_void) -> bool,
+            *const libc::c_void,
+            *const libc::c_void,
         ),
     ) {
         self.swap_callback = swap_callback;
     }
 
-    pub fn lock(&mut self) -> (crate::BufferObject, libc::c_int) {
+    pub fn lock(&mut self) -> (crate::BufferObject, libc::c_uint) {
         self.swap();
 
         let last_bo_handle = self.bo_handle;

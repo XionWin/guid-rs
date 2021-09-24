@@ -49,7 +49,7 @@ impl ModeInfo {
         self.mode_type
     }
 
-    pub fn get_handle(&self) -> *const std::ffi::c_void {
+    pub fn get_handle(&self) -> *const libc::c_void {
         self.handle as _
     }
 }

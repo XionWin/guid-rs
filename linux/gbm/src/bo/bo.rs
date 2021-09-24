@@ -20,7 +20,7 @@ impl BufferObject {
     //     }
     // }
 
-    pub(crate) fn get_fb(&self, device: &crate::Device) -> libc::c_int {
+    pub(crate) fn get_fb(&self, device: &crate::Device) -> libc::c_uint {
         match unsafe { crate::ffi::gbm_bo_get_user_data(self.handle) } {
             user_data if user_data == std::ptr::null() => {
                 let width = unsafe { crate::ffi::gbm_bo_get_width(self.handle) };
@@ -29,14 +29,14 @@ impl BufferObject {
                 let plane_count = unsafe { crate::ffi::gbm_bo_get_plane_count(self.handle) };
 
                 let mut strides = Vec::<libc::c_uint>::new();
-                let mut handles = Vec::<libc::c_uint>::new();
+                let mut handles = Vec::<*const libc::c_void>::new();
                 let mut offsets = Vec::<libc::c_uint>::new();
                 for plane_index in 0..plane_count {
                     strides.push(unsafe {
                         crate::ffi::gbm_bo_get_stride_for_plane(self.handle, plane_index)
                     });
                     handles.push(unsafe {
-                        crate::ffi::gbm_bo_get_handle_for_plane(self.handle, plane_index).u32_
+                        crate::ffi::gbm_bo_get_handle_for_plane(self.handle, plane_index).ptr
                     });
                     offsets
                         .push(unsafe { crate::ffi::gbm_bo_get_offset(self.handle, plane_index) });
@@ -68,7 +68,7 @@ impl BufferObject {
 
 extern "C" fn destroy_user_data_callback(
     bo: *const crate::ffi::GbmBufferObject,
-    data: *const std::ffi::c_void,
+    data: *const libc::c_void,
 ) {
     println!("destroy_user_data_callback bo: {:?} data: {:?}", bo, data);
 }

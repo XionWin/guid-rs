@@ -66,7 +66,7 @@ pub fn set_crtc(
     y: libc::c_uint,
     connectors: *const libc::c_uint,
     count: libc::c_uint,
-    mode: *const std::ffi::c_void,
+    mode: *const libc::c_void,
 ) -> libc::c_int {
     unsafe {
         crate::ffi::drmModeSetCrtc(fd, crtc_id, buffer_id, x, y, connectors, count, mode)

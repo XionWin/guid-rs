@@ -50,7 +50,7 @@ impl Context {
         let display_handle = self.display;
         let surface_handle = self.surface;
 
-        let func = |display: *const std::ffi::c_void, surface: *const std::ffi::c_void| {
+        let func = |display: *const libc::c_void, surface: *const libc::c_void| {
             unsafe {
                 crate::ffi::eglSwapBuffers(display as _, surface as _)
              }
@@ -116,7 +116,7 @@ impl Context {
 
 }
 
-fn vertical_synchronization(fd: RawFd, crtc_id: libc::c_uint, fb: libc::c_int) {
+fn vertical_synchronization(fd: RawFd, crtc_id: libc::c_uint, fb: libc::c_uint) {
     let evt_context = drm::def::EventContext {
         version: DRM_CONTEXT_VERSION,
         vblank_handler,
