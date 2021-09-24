@@ -1,9 +1,7 @@
 use drawing::color::*;
 
 fn main() {
-    let file = libc::File::new("/dev/dri/card1");
-    let fd = file.get_fd();
-    println!("{:}: {}", file.get_path(), fd);
+    let fd = libc::File::new("/dev/dri/card1").get_fd();
     let r = drm::Resources::new(fd);
     println!("{:#?}", r);
     
