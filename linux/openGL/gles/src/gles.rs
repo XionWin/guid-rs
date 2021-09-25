@@ -1,4 +1,4 @@
-use std::{ffi::CStr, str::FromStr};
+use std::{ffi::CStr};
 
 use libc::*;
 
@@ -10,30 +10,36 @@ pub fn get_string(name: crate::def::StringName) -> String {
 
 pub fn clear_color(red: c_float, green: c_float, blue: c_float, alpha: c_float) {
     unsafe {
-        crate::ffi::glClearColor(red, green, blue, alpha)
+        crate::ffi::glClearColor(red, green, blue, alpha);
     }
 }
 pub fn clear(mask: c_int) {
     unsafe {
-        crate::ffi::glClear(mask)
+        crate::ffi::glClear(mask);
     }
 }
 
 pub fn viewport(x: c_int, y: c_int, width: c_int, height: c_int) {
     unsafe {
-        crate::ffi::glViewport(x, y, width, height)
+        crate::ffi::glViewport(x, y, width, height);
     }
 }
 
-pub fn bind_vertex_array(array: c_uint) {
+pub fn gen_vertex_arrays(n: c_uint, array: *mut c_uint) {
     unsafe {
-        crate::ffi::glBindVertexArray(array)
+        crate::ffi::glGenVertexArrays(n, array);
     }
 }
 
 pub fn gen_buffers(n: c_uint, buffer: *mut c_uint) {
     unsafe {
         crate::ffi::glGenBuffers(n, buffer);
+    }
+}
+
+pub fn bind_vertex_array(array_id: c_uint) {
+    unsafe {
+        crate::ffi::glBindVertexArray(array_id);
     }
 }
 
