@@ -1,3 +1,5 @@
+use std::io::SeekFrom;
+
 use libc::*;
 
 #[derive(Debug)]
@@ -22,7 +24,12 @@ impl GfxProgram {
     }
 
     pub fn link(&self) {
-        
+        unsafe {
+            crate::ffi::glAttachShader(self.id, self.vertex_shader.id);
+            crate::ffi::glAttachShader(self.id, self.fragment_shader.id);
+            crate::ffi::glLinkProgram(self.id);
+            check_link(self);
+        }
     }
 }
 
@@ -31,5 +38,15 @@ impl Drop for GfxProgram {
         unsafe {
             crate::ffi::glDeleteShader(self.id);
         }
+    }
+}
+
+fn check_link(program: &super::GfxProgram) {
+    let mut is_linked = 0;
+    unsafe {
+        crate::ffi::glGetProgramiv(program.id, crate::def::ProgramParameter::LinkStatus, &mut is_linked);
+    }
+    if is_linked == 0 {
+        panic!("GLES program link faild");
     }
 }

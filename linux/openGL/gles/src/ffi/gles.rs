@@ -18,6 +18,7 @@ extern "C" {
     pub fn glUniformMatrix4fv(location: c_uint, count: c_uint, transpose: bool, value: *const c_float);
 
     pub fn glCreateProgram() -> c_uint;
+    pub fn glGetProgramiv(program_id: c_uint, program_parameter: crate::def::ProgramParameter, value: *mut c_int);
     pub fn glCreateShader(shader_type: crate::def::ShaderType) -> c_uint;
     pub fn glDeleteShader(shader_id: c_uint);
     pub fn glShaderSource(shader_id: c_uint, count: c_int, source: *const *const c_char, len: c_int);

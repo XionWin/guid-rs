@@ -43,6 +43,7 @@ fn render(mut context: Context) -> ! {
     let mut direction = true;
 
     let program = gles::GfxProgram::new("shaders/simplevertshader_v3.glsl", "shaders/simplefragshader_v3.glsl");
+    program.link();
     println!("program: {:#?}", program);
 
     let mut last_tick = std::time::SystemTime::now();

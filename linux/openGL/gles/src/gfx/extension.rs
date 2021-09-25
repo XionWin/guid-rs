@@ -19,7 +19,6 @@ fn check(shader: super::GfxShader) -> super::GfxShader {
     shader
 }
 
-
 fn check_compile(shader: super::GfxShader) -> super::GfxShader {
     let mut is_compiled = 0;
     unsafe {
