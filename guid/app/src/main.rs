@@ -42,17 +42,14 @@ fn render(mut context: Context) -> ! {
     let mut value = 0f32;
     let mut direction = true;
 
+    let shader = gles::GfxShader::new(gles::def::ShaderType::VertexShader);
+    println!("shader: {:#?}", shader);
+
     let mut last_tick = std::time::SystemTime::now();
     loop {
-        let hsv = HSV::new(value, 1.0f32, 0.5f32);
-        let rgb: RGB = hsv.into();
-        let (r, g, b) = rgb.into();
-        
-        gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
-        gles::clear(0x00004000);
-        
+        render_frame(&mut value);
         context.update();
-        
+
         value += match direction {
             true => 1f32,
             false => -1f32,
@@ -76,4 +73,12 @@ fn render(mut context: Context) -> ! {
             _ => {}
         }
     }
+}
+
+fn render_frame(angle: &mut f32) {
+    let hsv = HSV::new(*angle, 1.0f32, 0.5f32);
+    let rgb: RGB = hsv.into();
+    let (r, g, b) = rgb.into();
+    gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
+    gles::clear(0x00004000);
 }

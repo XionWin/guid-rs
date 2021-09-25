@@ -14,4 +14,6 @@ extern "C" {
     pub fn glBindBuffer(target: crate::def::BufferTarget, buffer_id: c_uint);
     pub fn glBufferData(target: crate::def::BufferTarget, size: c_int, data: *const c_void, hint: crate::def::BufferUsageHint);
     pub fn glUniformMatrix4fv(location: c_uint, count: c_uint, transpose: bool, value: *const c_float);
+
+    pub fn glCreateShader(shader_type: crate::def::ShaderType) -> c_uint;
 }
