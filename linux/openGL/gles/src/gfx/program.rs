@@ -10,14 +10,12 @@ pub struct GfxProgram
 
 impl GfxProgram {
     pub fn new(vertex_shader_path: &str, fragment_shader_path: &str) -> Self {
-        let vertex_shader = super::GfxShader::new(crate::def::ShaderType::VertexShader, vertex_shader_path).load();
-        let fragment_shader = super::GfxShader::new(crate::def::ShaderType::FragmentShader, fragment_shader_path).load();
         Self {
             id: unsafe {
                 crate::ffi::glCreateProgram()
             },
-            vertex_shader,
-            fragment_shader,
+            vertex_shader: super::GfxShader::new(crate::def::ShaderType::VertexShader, vertex_shader_path).load(),
+            fragment_shader: super::GfxShader::new(crate::def::ShaderType::FragmentShader, fragment_shader_path).load()
         }
     }
 
@@ -51,7 +49,6 @@ fn check_link(program: &super::GfxProgram) {
         }
     }
 }
-
 
 fn get_program_linked_information(program: &super::GfxProgram) -> Option<String> {
     let mut len = 0;
