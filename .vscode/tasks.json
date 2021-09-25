@@ -17,6 +17,17 @@
             "label": "copy",
             "command": "scp",
             "args": [
+                "-r",
+                "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/shaders",
+                "pi@192.168.0.205:/home/pi/Documents"
+            ],
+            "dependsOn": "copy executable"
+        },
+        {
+            "type": "shell",
+            "label": "copy executable",
+            "command": "scp",
+            "args": [
                 "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/guid",
                 "pi@192.168.0.205:/home/pi/Documents"
             ],
@@ -39,10 +50,11 @@
         {
             "type": "shell",
             "label": "build",
-            "command": "cargo",
+            "command": "bash",
             // "options": {"env": {"PATH": "/home/win/.raspi-build/tools/arm-bcm2708/arm-linux-gnueabihf/bin:${env:PATH}"}},
             "args": [
-                "build"
+                "make.sh",
+                "build",
             ]
         },
     ]

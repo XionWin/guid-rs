@@ -8,6 +8,6 @@ Library dependencies:
 
 ---
 ## Tested on raspberry pi (Raspbian lite) with Waveshare AMOLED screen
-![image_01](https://github.com/XionWin/guid-rs/blob/main/resource/image_01.jpg?raw=true)
+![image_01](https://github.com/XionWin/guid-rs/blob/main/resources/image_01.jpg?raw=true)
 ---
-![DRM/KMS diagram](https://github.com/XionWin/guid-rs/blob/main/resource/Linux_graphics_drivers_DRI_Wayland.svg.png?raw=true)
+![DRM/KMS diagram](https://github.com/XionWin/guid-rs/blob/main/resources/Linux_graphics_drivers_DRI_Wayland.svg.png?raw=true)
