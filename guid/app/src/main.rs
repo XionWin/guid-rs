@@ -1,6 +1,7 @@
 use drawing::color::*;
+use egl::Context;
 
-fn main() {
+fn main() -> ! {
     let fd = libc::File::new("/dev/dri/card1").get_fd();
     let r = drm::Resources::new(fd);
     println!("{:#?}", r);
@@ -27,6 +28,10 @@ fn main() {
     println!("{:#?}", context);
     context.initialize();
 
+    render(context);
+}
+
+fn render(mut context: Context) -> ! {
     let mut counter = 0u64;
     let mut value = 0f32;
     let mut direction = true;
@@ -36,16 +41,15 @@ fn main() {
         let hsv = HSV::new(value, 1.0f32, 0.5f32);
         let rgb: RGB = hsv.into();
         let (r, g, b) = rgb.into();
-        unsafe {
-            gles::glClearColor(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
-            gles::glClear(0x00004000);
-        }
+        
+        gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
+        gles::clear(0x00004000);
         
         context.update();
         
         value += match direction {
-            true => 0.8f32,
-            false => -0.8f32,
+            true => 1f32,
+            false => -1f32,
         };
 
         match value {
