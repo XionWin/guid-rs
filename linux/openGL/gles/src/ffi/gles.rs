@@ -28,4 +28,5 @@ extern "C" {
     
     pub fn glAttachShader(program_id: c_uint, shader_id: c_uint);
     pub fn glLinkProgram(program_id: c_uint);
+    pub fn glGetProgramInfoLog(program_id: c_uint, buf_size: c_int, length: *mut c_int, info: *mut c_uchar);
 }

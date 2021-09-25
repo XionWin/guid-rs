@@ -1,5 +1,3 @@
-use std::io::SeekFrom;
-
 use libc::*;
 
 #[derive(Debug)]
@@ -47,6 +45,27 @@ fn check_link(program: &super::GfxProgram) {
         crate::ffi::glGetProgramiv(program.id, crate::def::ProgramParameter::LinkStatus, &mut is_linked);
     }
     if is_linked == 0 {
-        panic!("GLES program link faild");
+        match get_program_linked_information(program) {
+            Some(msg) => panic!("GLES program link faild error: {:?}", msg),
+            None => panic!("GLES program link faild error: NONE"),
+        }
+    }
+}
+
+
+fn get_program_linked_information(program: &super::GfxProgram) -> Option<String> {
+    let mut len = 0;
+    unsafe {
+        crate::ffi::glGetProgramiv(program.id, crate::def::ProgramParameter::InfoLogLength, &mut len);
+    }
+    match len {
+        len if len > 0 => {
+            let mut buf = vec![0u8; len as _];
+            unsafe {
+                crate::ffi::glGetProgramInfoLog(program.id, len, std::ptr::null_mut::<libc::c_int>(), buf.as_mut_ptr());
+            }
+            Some(String::from_utf8(buf).expect("GLES glGetProgramInfoLog error"))
+        },
+        _ => None,
     }
 }
