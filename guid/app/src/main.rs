@@ -42,8 +42,8 @@ fn render(mut context: Context) -> ! {
     let mut value = 0f32;
     let mut direction = true;
 
-    let shader = gles::GfxShader::new(gles::def::ShaderType::VertexShader);
-    println!("shader: {:#?}", shader);
+    let program = gles::GfxProgram::new("shaders/simplevertshader_v3.glsl", "shaders/simplefragshader_v3.glsl");
+    println!("program: {:#?}", program);
 
     let mut last_tick = std::time::SystemTime::now();
     loop {

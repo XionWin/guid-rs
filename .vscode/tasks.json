@@ -35,15 +35,25 @@
                 "-9",
                 "gdbserver"
             ],
+            "dependsOn": "copy local"
+        },
+        {
+            "type": "shell",
+            "label": "copy local",
+            "command": "scp",
+            "args": [
+                "-r",
+                "${workspaceRoot}/shaders",
+                "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug",
+            ],
             "dependsOn": "build"
         },
         {
             "type": "shell",
             "label": "build",
-            "command": "bash",
+            "command": "cargo",
             // "options": {"env": {"PATH": "/home/win/.raspi-build/tools/arm-bcm2708/arm-linux-gnueabihf/bin:${env:PATH}"}},
             "args": [
-                "make.sh",
                 "build",
             ]
         },

@@ -9,16 +9,22 @@ pub struct GfxShader
 }
 
 impl GfxShader {
-    pub fn new(shader_type: crate::def::ShaderType) -> Self {
-        let contents = std::fs::read_to_string("shaders/simplevertshader_v3.glsl")
-        .expect("Something went wrong reading the file");
-        println!("{:?}", &contents);
+    pub fn new(shader_type: crate::def::ShaderType, path: &str) -> Self {
         Self {
             id: unsafe {
                 crate::ffi::glCreateShader(shader_type)
             },
-            source: String::new(),
+            source: std::fs::read_to_string(path)
+            .expect("Something went wrong reading the file"),
             shader_type,
+        }
+    }
+}
+
+impl Drop for GfxShader {
+    fn drop(&mut self) {
+        unsafe {
+            crate::ffi::glDeleteShader(self.id);
         }
     }
 }
