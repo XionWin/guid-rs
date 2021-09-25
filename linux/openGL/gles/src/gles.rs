@@ -1,4 +1,12 @@
+use std::{ffi::CStr, str::FromStr};
+
 use libc::*;
+
+pub fn get_string(name: crate::def::StringName) -> String {
+    String::from(unsafe {
+        CStr::from_ptr(crate::ffi::glGetString(name))
+    }.to_str().unwrap())
+}
 
 pub fn clear_color(red: c_float, green: c_float, blue: c_float, alpha: c_float) {
     unsafe {

@@ -2,7 +2,8 @@ use libc::*;
 
 #[link(name = "GLESv2")]
 #[allow(improper_ctypes)]
-extern "C" {   
+extern "C" {
+    pub fn glGetString(name: crate::def::StringName) -> *const libc::c_char;
     pub fn glClearColor(red: c_float, green: c_float, blue: c_float, alpha: c_float);
     pub fn glClear(mask: c_int);
     pub fn glViewport(x: c_int, y: c_int, width: c_int, height: c_int);

@@ -26,8 +26,14 @@ fn main() -> ! {
 
     let mut context = egl::Context::new(gbm, true);
     println!("{:#?}", context);
-    context.initialize();
 
+    println!("GL Extensions: {:?}", gles::get_string(gles::def::StringName::Extensions));
+    println!("GL Version: {:?}", gles::get_string(gles::def::StringName::Version));
+    println!("GL Sharding Language Version: {:?}", gles::get_string(gles::def::StringName::ShadingLanguageVersion));
+    println!("GL Vendor: {:?}", gles::get_string(gles::def::StringName::Vendor));
+    println!("GL Renderer: {:?}", gles::get_string(gles::def::StringName::Renderer));
+
+    context.initialize();
     render(context);
 }
 
