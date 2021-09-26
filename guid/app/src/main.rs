@@ -1,4 +1,4 @@
-use std::{os::raw::c_float, vec};
+use std::{vec};
 
 use egl::Context;
 
@@ -38,7 +38,7 @@ fn main() -> ! {
     render(context);
 }
 
-fn render(mut context: Context) -> ! {
+fn render(context: Context) -> ! {
 
     gles::viewport(0, 0, context.get_width(), context.get_height());
     
@@ -107,26 +107,48 @@ fn render(mut context: Context) -> ! {
     
     let model_mat_location = gles::get_uniform_location(program.get_id(), "model_mat");
     
+    render_with_counter(context, model_mat_location);
+}
+
+fn render_with_counter(mut context: Context, model_mat_location: u32) -> ! {
+    let mut counter = 0u64;
+    let mut last_tick = std::time::SystemTime::now();
+    
     let mut angle = 0u32;
     loop {
-        let hsv = drawing::color::HSV::new(angle as f32, 1.0f32, 0.5f32);
-        let rgb: drawing::color::RGB = hsv.into();
-        let (r, g, b) = rgb.into();
-
-        gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
-        gles::clear(0x00004000);
-        gles::bind_vertex_array(0);
-        set_rotation_matrix(angle as f32 / 360f32 * std::f32::consts::PI * 2f32, model_mat_location);
-        gles::draw_elements(gles::def::BeginMode::Triangles, 6, gles::def::DrawElementsType::UnsignedShort, std::ptr::null());
-
-        
+        render_frame(angle, model_mat_location);
         context.update();
 
         angle += 1;
         if angle >= 360 {
             angle = 0;
         }
+
+        counter += 1;
+
+        match last_tick.elapsed() {
+            Ok(elapsed) if elapsed.as_secs() > 1 => {
+                let fps = counter as f64 / elapsed.as_millis() as f64 * 1000f64;
+                println!("{:?} frames rendered in {:?} millis -> FPS= {:.2?}", counter, elapsed.as_millis(), fps);
+                counter = 0;
+                last_tick = std::time::SystemTime::now();
+            }
+            _ => {}
+        }
     }
+}
+
+fn render_frame(angle: u32, model_mat_location: u32) {
+    let hsv = drawing::color::HSV::new(angle as f32, 1.0f32, 0.5f32);
+    let rgb: drawing::color::RGB = hsv.into();
+    let (r, g, b) = rgb.into();
+
+    gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
+    gles::clear(0x00004000);
+    gles::bind_vertex_array(0);
+    set_rotation_matrix(angle as f32 / 360f32 * std::f32::consts::PI * 2f32, model_mat_location);
+    gles::draw_elements(gles::def::BeginMode::Triangles, 6, gles::def::DrawElementsType::UnsignedShort, std::ptr::null());
+
 }
 
 
