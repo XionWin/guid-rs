@@ -11,7 +11,7 @@ Library dependencies:
 ![image_01](https://github.com/XionWin/guid-rs/blob/main/resources/image_01.jpg?raw=true)
 ![image_02](https://github.com/XionWin/guid-rs/blob/main/resources/image_02.jpg?raw=true)
 
-#### Resources usage is quite low, the memory usage of C# version more 50-75% (framework libs) than rust one; the cpu usage of C# version is 25% higher than rust version. The efficiency make sense, because the core business is executed by the dynamic library, and C# and Rust as the calling part as expected, C# is a doubling language.
+#### Resources usage is relatively low, and the C# version needs more 50-75% memory (load framework libs) than Rust; the CPU usage is up to 25% higher than the rust version. The result makes sense because the dynamic library executes the core business, and C# and Rust just played as the FFI caller, C# does is a doubling language.
 ![image_03](https://github.com/XionWin/guid-rs/blob/main/resources/image_03.jpg?raw=true)
 
 ---
