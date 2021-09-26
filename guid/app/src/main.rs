@@ -43,46 +43,14 @@ fn render(mut context: Context) -> ! {
     program.link();
     println!("program: {:#?}", program);
 
-    
-    println!("check_error: {:#?}", gles::check_error());
 
-    let mut counter = 0u64;
-    let mut value = 0f32;
-    let mut direction = true;
-    let mut last_tick = std::time::SystemTime::now();
     loop {
-        render_frame(&mut value);
+        render_frame();
         context.update();
-
-        value += match direction {
-            true => 1f32,
-            false => -1f32,
-        };
-
-        match value {
-            v if v >= 360f32 => direction = false,
-            v if v <= 0f32 => direction = true,
-            _ => {},
-        }
-
-        counter += 1;
-
-        match last_tick.elapsed() {
-            Ok(elapsed) if elapsed.as_secs() > 1 => {
-                let fps = counter as f64 / elapsed.as_millis() as f64 * 1000f64;
-                println!("{:?} frames rendered in {:?} millis -> FPS= {:.2?}", counter, elapsed.as_millis(), fps);
-                counter = 0;
-                last_tick = std::time::SystemTime::now();
-            }
-            _ => {}
-        }
     }
 }
 
-fn render_frame(angle: &mut f32) {
-    let hsv = HSV::new(*angle, 1.0f32, 0.5f32);
-    let rgb: RGB = hsv.into();
-    let (r, g, b) = rgb.into();
-    gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
+fn render_frame() {
+    gles::clear_color(1f32, 1f32, 1f32, 0.3f32);
     gles::clear(0x00004000);
 }
