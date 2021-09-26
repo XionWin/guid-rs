@@ -44,6 +44,14 @@ impl Context {
         }
     }
 
+    pub fn get_width(&self) -> libc::c_int {
+        self.width
+    }
+
+    pub fn get_height(&self) -> libc::c_int {
+        self.height
+    }
+
     pub fn initialize(&mut self) {
         let surface = self.gbm.get_surface_mut();
 
