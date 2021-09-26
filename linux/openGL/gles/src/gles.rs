@@ -2,6 +2,12 @@ use std::{ffi::CStr};
 
 use libc::*;
 
+pub fn check_error() -> c_uint {
+    unsafe{
+        crate::ffi::glGetError()
+    }
+}
+
 pub fn get_string(name: crate::def::StringName) -> String {
     String::from(unsafe {
         CStr::from_ptr(crate::ffi::glGetString(name))
@@ -13,7 +19,7 @@ pub fn clear_color(red: c_float, green: c_float, blue: c_float, alpha: c_float) 
         crate::ffi::glClearColor(red, green, blue, alpha);
     }
 }
-pub fn clear(mask: c_int) {
+pub fn clear(mask: c_uint) {
     unsafe {
         crate::ffi::glClear(mask);
     }
@@ -25,7 +31,7 @@ pub fn viewport(x: c_int, y: c_int, width: c_int, height: c_int) {
     }
 }
 
-pub fn gen_vertex_arrays(n: c_uint, array: *mut c_uint) {
+pub fn gen_vertex_arrays(n: c_int, array: *mut c_uint) {
     unsafe {
         crate::ffi::glGenVertexArrays(n, array);
     }

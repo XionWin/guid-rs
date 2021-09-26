@@ -43,6 +43,9 @@ fn render(mut context: Context) -> ! {
     program.link();
     println!("program: {:#?}", program);
 
+    
+    println!("check_error: {:#?}", gles::check_error());
+
     let mut counter = 0u64;
     let mut value = 0f32;
     let mut direction = true;

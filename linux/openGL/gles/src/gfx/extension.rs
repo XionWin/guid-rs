@@ -7,16 +7,8 @@ impl crate::GfxShader {
             crate::ffi::glShaderSource(self.id, 1, sources.as_ptr(), 0);
             crate::ffi::glCompileShader(self.id);
         }
-        check(check_compile(self))
+        check_compile(self)
     }
-}
-
-fn check(shader: super::GfxShader) -> super::GfxShader {
-    match unsafe{ crate::ffi::glGetError() } {
-        code if code != 0 => panic!("GLES , error {:?}", code),
-        _ => {}
-    };
-    shader
 }
 
 fn check_compile(shader: super::GfxShader) -> super::GfxShader {

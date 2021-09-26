@@ -5,12 +5,12 @@ use libc::*;
 extern "C" {
 
     pub fn glGetError() -> c_uint;
-    pub fn glGetString(name: crate::def::StringName) -> *const c_char;
+    pub fn glGetString(name: crate::def::StringName) -> *const c_uchar;
     pub fn glClearColor(red: c_float, green: c_float, blue: c_float, alpha: c_float);
-    pub fn glClear(mask: c_int);
+    pub fn glClear(mask: c_uint);
     pub fn glViewport(x: c_int, y: c_int, width: c_int, height: c_int);
     
-    pub fn glGenVertexArrays(n: c_uint, array: *mut c_uint);
+    pub fn glGenVertexArrays(n: c_int, array: *mut c_uint);
     pub fn glGenBuffers(n: c_uint, buffer: *mut c_uint);
     pub fn glBindVertexArray(array_id: c_uint);
     pub fn glBindBuffer(target: crate::def::BufferTarget, buffer_id: c_uint);
@@ -28,5 +28,5 @@ extern "C" {
     
     pub fn glAttachShader(program_id: c_uint, shader_id: c_uint);
     pub fn glLinkProgram(program_id: c_uint);
-    pub fn glGetProgramInfoLog(program_id: c_uint, buf_size: c_int, length: *mut c_int, info: *mut c_uchar);
+    pub fn glGetProgramInfoLog(program_id: c_uint, buf_size: c_int, length: *mut c_int, info: *mut c_char);
 }
