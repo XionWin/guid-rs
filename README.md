@@ -11,7 +11,7 @@ Library dependencies:
 ![image_01](https://github.com/XionWin/guid-rs/blob/main/resources/image_01.jpg?raw=true)
 ![image_02](https://github.com/XionWin/guid-rs/blob/main/resources/image_02.jpg?raw=true)
 
-## Memory useage is very low
+## Memory useage is very low than (C# version)
 ![image_03](https://github.com/XionWin/guid-rs/blob/main/resources/image_03.jpg?raw=true)
 
 ---
