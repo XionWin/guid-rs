@@ -19,11 +19,16 @@ impl GfxProgram {
         }
     }
 
-    pub fn link(&self) {
+    pub fn get_id(&self) -> c_uint {
+        self.id
+    }
+
+    pub fn active(&self) {
         unsafe {
             crate::ffi::glAttachShader(self.id, self.vertex_shader.id);
             crate::ffi::glAttachShader(self.id, self.fragment_shader.id);
             crate::ffi::glLinkProgram(self.id);
+            crate::ffi::glUseProgram(self.id);
             check_link(self);
         }
     }

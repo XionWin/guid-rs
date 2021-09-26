@@ -1,13 +1,20 @@
-use libc::*;
+
+type VertexDataType = libc::c_float;
 
 #[repr(C)]
 #[derive(Debug)]
 pub struct Vertex
 {
-    pub x: c_float,
-    pub y: c_float,
-    pub r: c_float,
-    pub g: c_float,
-    pub b: c_float,
-    pub a: c_float,
+    pub x: VertexDataType,
+    pub y: VertexDataType,
+    pub r: VertexDataType,
+    pub g: VertexDataType,
+    pub b: VertexDataType,
+    pub a: VertexDataType,
+}
+
+impl Vertex {
+    pub fn new(x: VertexDataType, y: VertexDataType, r: VertexDataType, g: VertexDataType, b: VertexDataType, a: VertexDataType) -> Self {
+        Self {x, y, r, g, b, a}
+    }
 }

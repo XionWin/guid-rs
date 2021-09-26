@@ -1,9 +1,9 @@
 impl crate::GfxShader {
     pub(crate) fn load(self) -> Self {
+        let mut source = (&self.source).bytes().collect::<Vec<libc::c_char>>();
+        source.push(b'\0');
+        let sources = vec![source.as_ptr()];
         unsafe {
-            let mut source = (&self.source).bytes().collect::<Vec<libc::c_char>>();
-            source.push(b'\0');
-            let sources = vec![source.as_ptr()];
             crate::ffi::glShaderSource(self.id, 1, sources.as_ptr(), 0);
             crate::ffi::glCompileShader(self.id);
         }

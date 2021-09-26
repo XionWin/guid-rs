@@ -66,3 +66,49 @@ pub fn uniform_matrix4fv(location: c_uint, count: c_uint, transpose: bool, value
         crate::ffi::glUniformMatrix4fv(location, count, transpose, value);
     }
 }
+
+
+pub fn use_program(program_id: c_uint) {
+    unsafe {
+        crate::ffi::glUseProgram(program_id);
+    }
+}
+
+pub fn get_attrib_location(program_id: c_uint, name: &str) -> c_uint {
+    let mut buffer = name.bytes().collect::<Vec<u8>>();
+    buffer.push(b'\0');
+    match unsafe { crate::ffi::glGetAttribLocation(program_id, buffer.as_ptr()) } {
+        value if value >= 0 => value as c_uint,
+        _ => panic!("GLES get_attrib_location error")
+    }
+}
+
+pub fn enable_vertex_attrib_array(index: c_uint) {
+    unsafe {
+        crate::ffi::glEnableVertexAttribArray(index)
+    }
+}
+
+pub fn vertex_attrib_pointer(
+    index: c_uint, 
+    size: c_int, 
+    attrib_pointer_type: crate::def::VertexAttribPointerType, 
+    is_normalized: bool, 
+    stride: c_uint, 
+    offset: c_int) {
+    unsafe {
+        crate::ffi::glVertexAttribPointer(index, size, attrib_pointer_type, is_normalized, stride, offset as _);
+    }
+}
+
+pub fn draw_elements(
+    begin_mode: crate::def::BeginMode,
+    count: c_uint,
+    draw_type: crate::def::DrawElementsType,
+    indices: *const c_void
+) {
+    unsafe {
+        crate::ffi::glDrawElements(begin_mode, count, draw_type, indices);
+    }
+}
+    

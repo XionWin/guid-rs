@@ -29,4 +29,21 @@ extern "C" {
     pub fn glAttachShader(program_id: c_uint, shader_id: c_uint);
     pub fn glLinkProgram(program_id: c_uint);
     pub fn glGetProgramInfoLog(program_id: c_uint, buf_size: c_int, length: *mut c_int, info: *mut c_char);
+
+    
+    pub fn glUseProgram(program_id: c_uint);
+
+    pub fn glGetAttribLocation(program_id: c_uint, name_handle: *const c_char) -> c_int;
+
+    pub fn glEnableVertexAttribArray(index: c_uint);
+    pub fn glVertexAttribPointer(index: c_uint, size: c_int, attrib_pointer_type: crate::def::VertexAttribPointerType, is_normalized: bool, stride: c_uint, pointer: *const c_void);
+    
+
+    pub fn glDrawElements(
+        begin_mode: crate::def::BeginMode,
+        count: c_uint,
+        draw_type: crate::def::DrawElementsType,
+        indices: *const c_void
+    );
+    
 }
