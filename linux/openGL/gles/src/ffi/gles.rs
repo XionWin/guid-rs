@@ -34,6 +34,7 @@ extern "C" {
     pub fn glUseProgram(program_id: c_uint);
 
     pub fn glGetAttribLocation(program_id: c_uint, name_handle: *const c_char) -> c_int;
+    pub fn glGetUniformLocation(program_id: c_uint, name_handle: *const c_char) -> c_int;
 
     pub fn glEnableVertexAttribArray(index: c_uint);
     pub fn glVertexAttribPointer(index: c_uint, size: c_int, attrib_pointer_type: crate::def::VertexAttribPointerType, is_normalized: bool, stride: c_uint, pointer: *const c_void);

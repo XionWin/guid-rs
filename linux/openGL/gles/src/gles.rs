@@ -83,6 +83,15 @@ pub fn get_attrib_location(program_id: c_uint, name: &str) -> c_uint {
     }
 }
 
+pub fn get_uniform_location(program_id: c_uint, name: &str) -> c_uint {
+    let mut buffer = name.bytes().collect::<Vec<u8>>();
+    buffer.push(b'\0');
+    match unsafe { crate::ffi::glGetUniformLocation(program_id, buffer.as_ptr()) } {
+        value if value >= 0 => value as c_uint,
+        _ => panic!("GLES get_uniform_location error")
+    }
+}
+
 pub fn enable_vertex_attrib_array(index: c_uint) {
     unsafe {
         crate::ffi::glEnableVertexAttribArray(index)
