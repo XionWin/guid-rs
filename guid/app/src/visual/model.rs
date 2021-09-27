@@ -1,0 +1,49 @@
+pub struct Model {
+    vertexes: Vec<super::Vertex>,
+    indices: Vec<u16>,
+    stride: usize,
+}
+
+impl Model {
+    pub fn new() -> Self {
+        const TRIANGLE_SIZE: f32 = 0.8f32;
+        let mut vertexes = vec![
+            super::Vertex::new(-0.5f32, 0.5f32, 1f32, 0f32, 0f32, 1f32),
+            super::Vertex::new(-0.5f32, -0.5f32, 0f32, 1f32, 0f32, 1f32),
+            super::Vertex::new(0.5f32, -0.5f32, 0f32, 0f32, 1f32, 1f32),
+        ];
+    
+        for i in 0..vertexes.len() {
+            vertexes[i].x = (-(i as f32) * (2f32 * std::f32::consts::PI / vertexes.len() as f32)).cos() * TRIANGLE_SIZE;
+            vertexes[i].y = (-(i as f32) * (2f32 * std::f32::consts::PI / vertexes.len() as f32)).sin() * TRIANGLE_SIZE;
+        }
+    
+        let indices = vec![0u16, 1u16, 2u16];
+
+        Self {
+            vertexes,
+            indices,
+            stride: std::mem::size_of::<super::Vertex>(),
+        }
+    }
+
+    pub fn get_vertex_size(&self) -> usize {
+        std::mem::size_of::<super::Vertex>() * self.vertexes.len()
+    }
+
+    pub fn get_vertex_ptr(&self) -> *const libc::c_void {
+        self.vertexes.as_ptr() as _
+    }
+
+    pub fn get_indices_size(&self) -> usize {
+        std::mem::size_of::<u16>() * self.indices.len()
+    }
+
+    pub fn get_indices_ptr(&self) -> *const libc::c_void {
+        self.indices.as_ptr() as _
+    }
+
+    pub fn get_stride(&self) -> usize {
+        self.stride
+    }
+}

@@ -1,6 +1,8 @@
 use std::{vec};
+mod visual;
 
 use egl::Context;
+pub use visual::*;
 
 fn main() -> ! {
     let fd = libc::File::new("/dev/dri/card1").get_fd();
@@ -41,20 +43,8 @@ fn main() -> ! {
 fn render(context: Context) -> ! {
 
     gles::viewport(0, 0, context.get_width(), context.get_height());
-    
-    const TRIANGLE_SIZE: f32 = 0.9f32;
-    let mut vertexes = vec![
-        gles::Vertex::new(-0.5f32, 0.5f32, 1f32, 0f32, 0f32, 1f32),
-        gles::Vertex::new(-0.5f32, -0.5f32, 0f32, 1f32, 0f32, 1f32),
-        gles::Vertex::new(0.5f32, -0.5f32, 0f32, 0f32, 1f32, 1f32),
-    ];
 
-    for i in 0..vertexes.len() {
-        vertexes[i].x = (-(i as f32) * (2f32 * std::f32::consts::PI / vertexes.len() as f32)).cos() * TRIANGLE_SIZE;
-        vertexes[i].y = (-(i as f32) * (2f32 * std::f32::consts::PI / vertexes.len() as f32)).sin() * TRIANGLE_SIZE;
-    }
-
-    let indices = vec![0u16, 1u16, 2u16];
+    let model = Model::new();
 
     let mut vbos = vec![0u32; 2];
 
@@ -64,15 +54,15 @@ fn render(context: Context) -> ! {
     gles::bind_buffer(gles::def::BufferTarget::ArrayBuffer, vbos[0]);
     gles::buffer_data(
         gles::def::BufferTarget::ArrayBuffer,
-        (std::mem::size_of::<gles::Vertex>() * vertexes.len()) as _,
-        vertexes.as_ptr() as _,
+        model.get_vertex_size() as _,
+        model.get_vertex_ptr(),
         gles::def::BufferUsageHint::StreamDraw
     );
     gles::bind_buffer(gles::def::BufferTarget::ElementArrayBuffer, vbos[1]);
     gles::buffer_data(
         gles::def::BufferTarget::ElementArrayBuffer,
-        (std::mem::size_of::<u16>() * indices.len()) as _,
-        indices.as_ptr() as _,
+        model.get_vertex_size() as _,
+        model.get_indices_ptr(),
         gles::def::BufferUsageHint::StreamDraw
     );
 
@@ -85,7 +75,7 @@ fn render(context: Context) -> ! {
         2, 
         gles::def::VertexAttribPointerType::Float, 
         false,
-        (std::mem::size_of::<gles::Vertex>()) as _, 
+        model.get_stride() as _, 
         0);
     gles::enable_vertex_attrib_array(po_attrib_index);
 
@@ -95,7 +85,7 @@ fn render(context: Context) -> ! {
         4, 
         gles::def::VertexAttribPointerType::Float, 
         false,
-        (std::mem::size_of::<gles::Vertex>()) as _, 
+        model.get_stride() as _, 
         (std::mem::size_of::<f32>() * 2) as _);
     gles::enable_vertex_attrib_array(co_attrib_index);
 
@@ -112,17 +102,13 @@ fn render(context: Context) -> ! {
 
 fn render_with_counter(mut context: Context, model_mat_location: u32) -> ! {
     let mut counter = 0u64;
+    let first_tick = std::time::SystemTime::now();
     let mut last_tick = std::time::SystemTime::now();
     
-    let mut angle = 0u32;
     loop {
+        let angle = (std::time::SystemTime::now().duration_since(first_tick).unwrap().as_millis() / 20 % 360) as u32;
         render_frame(angle, model_mat_location);
         context.update();
-
-        angle += 1;
-        if angle >= 360 {
-            angle = 0;
-        }
 
         counter += 1;
 
