@@ -2,6 +2,7 @@ pub struct Model {
     vertexes: Vec<super::Vertex>,
     indices: Vec<u16>,
     stride: usize,
+    color_offset: usize,
 }
 
 impl Model {
@@ -24,8 +25,12 @@ impl Model {
             vertexes,
             indices,
             stride: std::mem::size_of::<super::Vertex>(),
+            color_offset: std::mem::size_of::<f32>() * 2,
         }
     }
+    
+    pub const POSTION_LENGTH: usize = 2;
+    pub const COLOR_LENGTH: usize = 4;
 
     pub fn get_vertex_size(&self) -> usize {
         std::mem::size_of::<super::Vertex>() * self.vertexes.len()
@@ -45,5 +50,9 @@ impl Model {
 
     pub fn get_stride(&self) -> usize {
         self.stride
+    }
+
+    pub fn get_color_offset(&self) -> usize {
+        self.color_offset
     }
 }

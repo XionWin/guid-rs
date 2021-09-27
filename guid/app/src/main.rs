@@ -72,7 +72,7 @@ fn render(context: Context) -> ! {
     let po_attrib_index = gles::get_attrib_location(program.get_id(), "position");
     gles::vertex_attrib_pointer(
         po_attrib_index, 
-        2, 
+        Model::POSTION_LENGTH as _, 
         gles::def::VertexAttribPointerType::Float, 
         false,
         model.get_stride() as _, 
@@ -82,11 +82,11 @@ fn render(context: Context) -> ! {
     let co_attrib_index = gles::get_attrib_location(program.get_id(), "color");
     gles::vertex_attrib_pointer(
         co_attrib_index, 
-        4, 
+        Model::COLOR_LENGTH as _, 
         gles::def::VertexAttribPointerType::Float, 
         false,
         model.get_stride() as _, 
-        (std::mem::size_of::<f32>() * 2) as _);
+        model.get_color_offset() as _);
     gles::enable_vertex_attrib_array(co_attrib_index);
 
     
