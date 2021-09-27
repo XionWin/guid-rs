@@ -88,16 +88,16 @@ fn render(context: Context) -> ! {
         model.get_stride() as _, 
         model.get_color_offset() as _);
     gles::enable_vertex_attrib_array(co_attrib_index);
-
     
-    let proj_mat_location = gles::get_uniform_location(program.get_id(), "proj_mat");
-
-    resize(context.get_width(), context.get_height(), proj_mat_location);
-
-    
-    let model_mat_location = gles::get_uniform_location(program.get_id(), "model_mat");
-    
-    render_with_counter(context, model_mat_location);
+    resize(
+        context.get_width(), 
+        context.get_height(), 
+        gles::get_uniform_location(program.get_id(), "proj_mat")
+    );
+    render_with_counter(
+        context,
+        gles::get_uniform_location(program.get_id(), "model_mat")
+    );
 }
 
 fn render_with_counter(mut context: Context, model_mat_location: u32) -> ! {
