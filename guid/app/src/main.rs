@@ -69,25 +69,25 @@ fn render(context: Context) -> ! {
     let program = gles::GfxProgram::new("shaders/simplevertshader_v3.glsl", "shaders/simplefragshader_v3.glsl");
     program.active();
     
-    let po_attrib_index = gles::get_attrib_location(program.get_id(), "position");
+    let pos_idx = gles::get_attrib_location(program.get_id(), "position");
     gles::vertex_attrib_pointer(
-        po_attrib_index, 
+        pos_idx, 
         Model::POSTION_LENGTH as _, 
         gles::def::VertexAttribPointerType::Float, 
         false,
         model.get_stride() as _, 
         0);
-    gles::enable_vertex_attrib_array(po_attrib_index);
+    gles::enable_vertex_attrib_array(pos_idx);
 
-    let co_attrib_index = gles::get_attrib_location(program.get_id(), "color");
+    let clr_idx = gles::get_attrib_location(program.get_id(), "color");
     gles::vertex_attrib_pointer(
-        co_attrib_index, 
+        clr_idx, 
         Model::COLOR_LENGTH as _, 
         gles::def::VertexAttribPointerType::Float, 
         false,
         model.get_stride() as _, 
         model.get_color_offset() as _);
-    gles::enable_vertex_attrib_array(co_attrib_index);
+    gles::enable_vertex_attrib_array(clr_idx);
     
     resize(
         context.get_width(), 
