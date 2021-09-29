@@ -7,6 +7,6 @@ uniform mat4 model_mat;
 void main()
 {
         gl_Position = proj_mat * model_mat * vec4(position, 0, 1.0);
-        gl_PointSize = 10.0;
+        gl_PointSize = 20.0;
         vColor = color;
 }

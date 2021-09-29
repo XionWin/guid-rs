@@ -46,5 +46,8 @@ extern "C" {
         draw_type: crate::def::DrawElementsType,
         indices: *const c_void
     );
+
+    pub fn glDrawArrays(begin_mode: crate::def::BeginMode, first: c_int, count: c_uint);
+    
     
 }

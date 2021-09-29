@@ -120,4 +120,11 @@ pub fn draw_elements(
         crate::ffi::glDrawElements(begin_mode, count, draw_type, indices);
     }
 }
+
+
+pub fn draw_arrays(begin_mode: crate::def::BeginMode, first: c_int, count: c_uint) {
+    unsafe {
+        crate::ffi::glDrawArrays(begin_mode, first, count);
+    }
+}
     
