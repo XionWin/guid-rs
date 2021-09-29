@@ -4,7 +4,7 @@ mod visual;
 pub use visual::*;
 
 fn main() {
-    let mut es_context = drawing::Graphic::new("/dev/dri/card1", true);
+    let mut es_context = drawing::Graphic::new("/dev/dri/card1", false);
     drawing::begin_render!(render, render_frame, &mut es_context);
 }
 
@@ -69,18 +69,19 @@ fn render(graphic: &drawing::Graphic) -> (Model, u32, std::time::SystemTime) {
 
 fn render_frame(_graphic: &drawing::Graphic,  params: &mut (Model, u32, std::time::SystemTime)) {
     let (model, model_mat_location, first_tick) = params;
-    let angle = (std::time::SystemTime::now().duration_since(*first_tick).unwrap().as_millis() / 20 % 360) as u32;
-    let hsv = drawing::color::HSV::new(angle as f32, 1.0f32, 0.2f32);
-    let rgb: drawing::color::RGB = hsv.into();
-    let (r, g, b) = rgb.into();
+    let angle = (std::time::SystemTime::now().duration_since(*first_tick).unwrap().as_millis() / 50 % 360) as u32;
+    // let hsv = drawing::color::HSV::new(angle as f32, 1.0f32, 0.2f32);
+    // let rgb: drawing::color::RGB = hsv.into();
+    // let (r, g, b) = rgb.into();
 
-    gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
+    // gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
+    gles::clear_color(0.05f32, 0.05f32, 0.05f32, 1f32);
     gles::clear(0x00004000);
     gles::bind_vertex_array(0);
     set_rotation_matrix(angle as f32 / 360f32 * std::f32::consts::PI * 2f32, *model_mat_location);
     // gles::draw_elements(gles::def::BeginMode::Triangles, 3, gles::def::DrawElementsType::UnsignedShort, std::ptr::null());
     gles::draw_arrays(gles::def::BeginMode::Points, 0, model.get_len() as _);
-    gles::draw_arrays(gles::def::BeginMode::Polygon, 0, model.get_len() as _);
+    gles::draw_arrays(gles::def::BeginMode::LineLoop, 0, model.get_len() as _);
 }
 
 fn set_rotation_matrix(rad: f32, model_mat_location: u32)
