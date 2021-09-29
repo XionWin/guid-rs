@@ -1,46 +1,14 @@
 use std::{vec};
 mod visual;
 
-use egl::Context;
 pub use visual::*;
 
-fn main() -> ! {
-    let fd = libc::File::new("/dev/dri/card1").get_fd();
-    let r = drm::Resources::new(fd);
-    println!("{:#?}", r);
-    
-    let drm = drm::Drm::new(
-        r,
-        |conn| conn.get_connection_status() == drm::def::ConnectionStatus::Connected
-    );
-
-    let mode = drm.get_mode();
-    println!("{:#?}", drm);
-    println!("{:#?}", mode);
-
-    let gbm = gbm::Gbm::new(drm, gbm::def::SurfaceFormat::ARGB8888, vec![gbm::def::FormatModifier::DRM_FORMAT_MOD_LINEAR]);
-    println!("{:#?}", gbm);
-
-    for surface_format in gbm::def::SurfaceFormat::iter() {
-        if gbm.get_surface().get_device().is_format_supported(surface_format, gbm::def::SurfaceFlags::Linear) {
-            println!("{:?}", surface_format);
-        } 
-    }
-
-    let mut context = egl::Context::new(gbm, true);
-    println!("{:#?}", context);
-
-    println!("GL Extensions: {:?}", gles::get_string(gles::def::StringName::Extensions));
-    println!("GL Version: {:?}", gles::get_string(gles::def::StringName::Version));
-    println!("GL Sharding Language Version: {:?}", gles::get_string(gles::def::StringName::ShadingLanguageVersion));
-    println!("GL Vendor: {:?}", gles::get_string(gles::def::StringName::Vendor));
-    println!("GL Renderer: {:?}", gles::get_string(gles::def::StringName::Renderer));
-
-    context.initialize();
-    render(context);
+fn main() {
+    let mut es_context = drawing::ESContext::new();
+    drawing::begin_render!(render, render_frame, &mut es_context);
 }
 
-fn render(context: Context) -> ! {
+fn render(context: &drawing::ESContext) -> (u32,  u64, std::time::SystemTime, std::time::SystemTime) {
 
     gles::viewport(0, 0, context.get_width(), context.get_height());
 
@@ -94,37 +62,18 @@ fn render(context: Context) -> ! {
         context.get_height(), 
         gles::get_uniform_location(program.get_id(), "proj_mat")
     );
-    render_with_counter(
-        context,
-        gles::get_uniform_location(program.get_id(), "model_mat")
-    );
+
+    (
+        gles::get_uniform_location(program.get_id(), "model_mat"),
+        0u64,
+        std::time::SystemTime::now(),
+        std::time::SystemTime::now()
+    )
 }
 
-fn render_with_counter(mut context: Context, model_mat_location: u32) -> ! {
-    let mut counter = 0u64;
-    let first_tick = std::time::SystemTime::now();
-    let mut last_tick = std::time::SystemTime::now();
-    
-    loop {
-        let angle = (std::time::SystemTime::now().duration_since(first_tick).unwrap().as_millis() / 20 % 360) as u32;
-        render_frame(angle, model_mat_location);
-        context.update();
-
-        counter += 1;
-
-        match last_tick.elapsed() {
-            Ok(elapsed) if elapsed.as_secs() > 1 => {
-                let fps = counter as f64 / elapsed.as_millis() as f64 * 1000f64;
-                println!("{:?} frames rendered in {:?} millis -> FPS= {:.2?}", counter, elapsed.as_millis(), fps);
-                counter = 0;
-                last_tick = std::time::SystemTime::now();
-            }
-            _ => {}
-        }
-    }
-}
-
-fn render_frame(angle: u32, model_mat_location: u32) {
+fn render_frame(_context: &drawing::ESContext,  params: &mut (u32, u64, std::time::SystemTime, std::time::SystemTime)) {
+    let (model_mat_location, counter, first_tick, last_tick) = params;
+    let angle = (std::time::SystemTime::now().duration_since(*first_tick).unwrap().as_millis() / 20 % 360) as u32;
     let hsv = drawing::color::HSV::new(angle as f32, 1.0f32, 0.5f32);
     let rgb: drawing::color::RGB = hsv.into();
     let (r, g, b) = rgb.into();
@@ -132,8 +81,20 @@ fn render_frame(angle: u32, model_mat_location: u32) {
     gles::clear_color(r as f32 / 255f32, g as f32 / 255f32, b as f32 / 255f32, 0.3f32);
     gles::clear(0x00004000);
     gles::bind_vertex_array(0);
-    set_rotation_matrix(angle as f32 / 360f32 * std::f32::consts::PI * 2f32, model_mat_location);
+    set_rotation_matrix(angle as f32 / 360f32 * std::f32::consts::PI * 2f32, *model_mat_location);
     gles::draw_elements(gles::def::BeginMode::Triangles, 6, gles::def::DrawElementsType::UnsignedShort, std::ptr::null());
+    
+    *counter += 1;
+
+    match last_tick.elapsed() {
+        Ok(elapsed) if elapsed.as_secs() > 1 => {
+            let fps = *counter as f64 / elapsed.as_millis() as f64 * 1000f64;
+            println!("{:?} frames rendered in {:?} millis -> FPS= {:.2?}", counter, elapsed.as_millis(), fps);
+            *counter = 0;
+            *last_tick = std::time::SystemTime::now();
+        }
+        _ => {}
+    }
 
 }
 

@@ -6,3 +6,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+gles={path="../../linux/openGL/gles"}
+egl={path="../../linux/egl"}
+gbm={path="../../linux/gbm"}
+drm={path="../../linux/drm"}
+libc={path="../../linux/libc"}
