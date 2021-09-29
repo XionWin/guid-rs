@@ -4,12 +4,11 @@ mod visual;
 pub use visual::*;
 
 fn main() {
-    let mut es_context = drawing::ESContext::new();
+    let mut es_context = drawing::ESContext::new("/dev/dri/card1", true);
     drawing::begin_render!(render, render_frame, &mut es_context);
 }
 
 fn render(context: &drawing::ESContext) -> (u32,  u64, std::time::SystemTime, std::time::SystemTime) {
-
     gles::viewport(0, 0, context.get_width(), context.get_height());
 
     let model = Model::new();
@@ -97,8 +96,6 @@ fn render_frame(_context: &drawing::ESContext,  params: &mut (u32, u64, std::tim
     }
 
 }
-
-
 
 fn set_rotation_matrix(rad: f32, model_mat_location: u32)
 {

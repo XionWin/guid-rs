@@ -3,8 +3,8 @@ pub struct ESContext {
 }
 
 impl ESContext {
-    pub fn new() -> Self {
-        let fd = libc::File::new("/dev/dri/card1").get_fd();
+    pub fn new(device_path: &str, vertical_synchronization: bool) -> Self {
+        let fd = libc::File::new(device_path).get_fd();
         let r = drm::Resources::new(fd);
         println!("{:#?}", r);
         
@@ -26,7 +26,7 @@ impl ESContext {
             } 
         }
 
-        let mut context = egl::Context::new(gbm, true);
+        let mut context = egl::Context::new(gbm, vertical_synchronization);
         println!("{:#?}", context);
 
         println!("GL Extensions: {:?}", gles::get_string(gles::def::StringName::Extensions));
