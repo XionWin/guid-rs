@@ -1,4 +1,4 @@
 pub mod color;
-mod context;
+mod graphic;
 
-pub use context::*;
+pub use graphic::*;

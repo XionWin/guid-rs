@@ -1,8 +1,8 @@
-pub struct ESContext {
+pub struct Graphic {
     context: egl::Context
 }
 
-impl ESContext {
+impl Graphic {
     pub fn new(device_path: &str, vertical_synchronization: bool) -> Self {
         let fd = libc::File::new(device_path).get_fd();
         let r = drm::Resources::new(fd);
@@ -57,11 +57,17 @@ impl ESContext {
 
 #[macro_export]
 macro_rules! begin_render {
-    ($init:ident, $render:ident, $context:expr) => {
-        let mut params = $init($context);
+    ($init:ident, $render:ident, $graphic:expr) => {
+        gles::viewport(0, 0, $graphic.get_width(), $graphic.get_height());
+        let mut params = $init($graphic);
+        let mut counter = drawing::FrameCounter::new();
         loop {
-            $render($context, &mut params);
-            $context.get_context().update();
+            $render($graphic, &mut params);
+            $graphic.get_context().update();
+            counter.count();
+            if counter.pop() {
+                println!("{:}", counter);
+            }
         }
     };
 }
