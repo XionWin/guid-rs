@@ -15,39 +15,68 @@ fn main() {
 
 fn render(graphic: &drawing::Graphic) -> (Vec<Visual>, std::time::SystemTime) {
     let builder = Builder::new();
-    let triangle_1 = builder.build_shape(
-        crate::Triangle::new(
-            (540, 0),
-            (0, 1920),
-            (1080, 1920),
-            (1f32, 0f32, 0f32)
-        ).into()
-    );
+  
+    let visuals = vec![
+        builder.build_shape(
+            crate::Retangle::new(
+                0,
+                0,
+                200,
+                200,
+                (1f32, 0f32, 0f32)
+            ).into()
+        ),
+        builder.build_shape(
+            crate::Retangle::new(
+                -1080 / 2,
+                -1920 / 2,
+                200,
+                200,
+                (1f32, 1f32, 0f32)
+            ).into()
+        ),
+        builder.build_shape(
+            crate::Retangle::new(
+                1080 / 2 - 200,
+                1920 / 2 - 200,
+                200,
+                200,
+                (0f32, 1f32, 0f32)
+            ).into()
+        ),
+        builder.build_shape(
+            crate::Triangle::new(
+                (300, 0),
+                (200, -200),
+                (400, -200),
+                (0f32, 0f32, 1f32)
+            ).into()
+        ),
+        builder.build_shape(
+            crate::Elipse::new(
+                0,
+                -400,
+                200,
+                100,
+                (0f32, 0f32, 1f32)
+            ).into()
+        ),
+    ];
 
-    let triangle_2 = builder.build_shape(
-        crate::Triangle::new(
-            (540, 1920),
-            (0, 0),
-            (1080, 0),
-            (0f32, 0f32, 1f32)
-        ).into()
-    );
+    for visual in &visuals {
+        resize(
+            graphic.get_width(), 
+            graphic.get_height(), 
+            visual
+        );
+    }
 
-    resize(
-        graphic.get_width(), 
-        graphic.get_height(), 
-        &triangle_1
-    );
-    resize(
-        graphic.get_width(), 
-        graphic.get_height(), 
-        &triangle_2
-    );
+    gles::disable(gles::def::GLFeature::DepthTest);
 
     gles::set_line_width(10f32);
     
     (
-        vec![triangle_1, triangle_2],
+        visuals,
         std::time::SystemTime::now()
     )
 }
@@ -64,16 +93,14 @@ fn render_frame(_graphic: &drawing::Graphic,  params: &mut (Vec<Visual>, std::ti
     gles::clear(0x00004000);
     
     for visual in visuals {
-
-
         gles::bind_vertex_array(visual.get_id());
-  
-
         set_rotation_matrix(angle as f32 / 360f32 * std::f32::consts::PI * 2f32, visual.get_model_mat_id());
         // gles::draw_elements(gles::def::BeginMode::Triangles, 3, gles::def::DrawElementsType::UnsignedShort, std::ptr::null());
         match visual.get_visual_type() {
             crate::def::VisualType::Triangles => gles::draw_arrays(gles::def::BeginMode::Triangles, 0, visual.get_len() as _),
             crate::def::VisualType::Lines => gles::draw_arrays(gles::def::BeginMode::LineStrip, 0, visual.get_len() as _),
+            crate::def::VisualType::Polygon => gles::draw_arrays(gles::def::BeginMode::Polygon, 0, visual.get_len() as _),
+            crate::def::VisualType::TriangleFan => gles::draw_arrays(gles::def::BeginMode::TriangleFan, 0, visual.get_len() as _),
         }
         gles::draw_arrays(gles::def::BeginMode::Points, 0, visual.get_len() as _);
     }
@@ -110,28 +137,6 @@ fn resize(width: i32, height: i32, visual: &Visual)
 }
 
 fn set_ortho_matrix(_left: f32, _right: f32, _bottom: f32, _top: f32, _n: f32, _f: f32, proj_mat_location: u32) {
-    // set orthogonal matrix
-    // let mut mat = vec![0f32; 16];
-    // mat[0] = 2f32 / (right - left);
-    // mat[1] = 0f32;
-    // mat[2] = 0f32;
-    // mat[3] = 0f32;
-
-    // mat[4] = 0f32;
-    // mat[5] = 2f32 / (top - bottom);
-    // mat[6] = 0f32;
-    // mat[7] = 0f32;
-
-    // mat[8] = 0f32;
-    // mat[9] = 0f32;
-    // mat[10] = -2f32 / (f - n);
-    // mat[11] = 0f32;
-
-    // mat[12] = -(right + left) / (right - left);
-    // mat[13] = -(top + bottom) / (top - bottom);
-    // mat[14] = -(f + n) / (f - n);
-    // mat[15] = 1f32;
-    
     let mat = vec! [
         1f32, 0f32, 0f32, 0f32,
         0f32, 1f32, 0f32, 0f32,
@@ -140,3 +145,30 @@ fn set_ortho_matrix(_left: f32, _right: f32, _bottom: f32, _top: f32, _n: f32, _
     ];
     gles::uniform_matrix4fv(proj_mat_location, 1, false, mat.as_ptr());
 }
+
+
+// fn set_ortho_matrix(left: f32, right: f32, bottom: f32, top: f32, n: f32, f: f32, proj_mat_location: u32) {
+//     // set orthogonal matrix
+//     let mut mat = vec![0f32; 16];
+//     mat[0] = 2f32 / (right - left);
+//     mat[1] = 0f32;
+//     mat[2] = 0f32;
+//     mat[3] = 0f32;
+
+//     mat[4] = 0f32;
+//     mat[5] = 2f32 / (top - bottom);
+//     mat[6] = 0f32;
+//     mat[7] = 0f32;
+
+//     mat[8] = 0f32;
+//     mat[9] = 0f32;
+//     mat[10] = -2f32 / (f - n);
+//     mat[11] = 0f32;
+
+//     mat[12] = -(right + left) / (right - left);
+//     mat[13] = -(top + bottom) / (top - bottom);
+//     mat[14] = -(f + n) / (f - n);
+//     mat[15] = 1f32;
+    
+//     gles::uniform_matrix4fv(proj_mat_location, 1, false, mat.as_ptr());
+// }

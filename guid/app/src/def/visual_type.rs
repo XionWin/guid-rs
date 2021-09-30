@@ -1,5 +1,7 @@
 #[derive(Clone, Copy)]
 pub enum VisualType {
     Triangles,
-    Lines
+    Lines,
+    Polygon,
+    TriangleFan
 }

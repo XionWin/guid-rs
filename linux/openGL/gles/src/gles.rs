@@ -133,3 +133,14 @@ pub fn set_line_width(width: c_float) {
     }
 }
     
+pub fn enable(feature: crate::def::GLFeature){
+    unsafe {
+        crate::ffi::glEnable(feature);
+    }
+}
+
+pub fn disable(feature: crate::def::GLFeature){
+    unsafe {
+        crate::ffi::glDisable(feature);
+    }
+}
