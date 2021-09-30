@@ -48,6 +48,7 @@ extern "C" {
     );
 
     pub fn glDrawArrays(begin_mode: crate::def::BeginMode, first: c_int, count: c_uint);
-    
+
+    pub fn glLineWidth(width: c_float);
     
 }

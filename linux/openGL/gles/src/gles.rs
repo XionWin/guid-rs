@@ -67,7 +67,6 @@ pub fn uniform_matrix4fv(location: c_uint, count: c_uint, transpose: bool, value
     }
 }
 
-
 pub fn use_program(program_id: c_uint) {
     unsafe {
         crate::ffi::glUseProgram(program_id);
@@ -125,6 +124,12 @@ pub fn draw_elements(
 pub fn draw_arrays(begin_mode: crate::def::BeginMode, first: c_int, count: c_uint) {
     unsafe {
         crate::ffi::glDrawArrays(begin_mode, first, count);
+    }
+}
+
+pub fn set_line_width(width: c_float) {
+    unsafe {
+        crate::ffi::glLineWidth(width);
     }
 }
     

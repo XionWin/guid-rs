@@ -1,5 +1,3 @@
-mod vertex;
-mod model;
+mod visual;
 
-pub use vertex::*;
-pub use model::*;
+pub use visual::*;

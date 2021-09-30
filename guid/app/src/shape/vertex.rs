@@ -2,7 +2,7 @@
 type VertexDataType = libc::c_float;
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Vertex
 {
     pub x: VertexDataType,
