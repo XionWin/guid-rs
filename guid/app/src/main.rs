@@ -54,10 +54,10 @@ fn render(graphic: &drawing::Graphic) -> (Vec<Visual>, std::time::SystemTime) {
         ),
         builder.build_shape(
             crate::Elipse::new(
-                0,
-                -400,
-                200,
                 100,
+                -400,
+                100,
+                50,
                 (0f32, 0f32, 1f32)
             ).into()
         ),
@@ -102,23 +102,38 @@ fn render_frame(_graphic: &drawing::Graphic,  params: &mut (Vec<Visual>, std::ti
             crate::def::VisualType::Polygon => gles::draw_arrays(gles::def::BeginMode::Polygon, 0, visual.get_len() as _),
             crate::def::VisualType::TriangleFan => gles::draw_arrays(gles::def::BeginMode::TriangleFan, 0, visual.get_len() as _),
         }
-        gles::draw_arrays(gles::def::BeginMode::Points, 0, visual.get_len() as _);
+
+        match visual.get_shape_type() {
+            crate::def::ShapeType::Elipse => {},
+            _ => gles::draw_arrays(gles::def::BeginMode::Points, 0, visual.get_len() as _),
+        }
     }
 }
 
-fn set_rotation_matrix(rad: f32, model_mat_location: u32)
+fn set_rotation_matrix(_rad: f32, model_mat_location: u32)
 {
-    // rotation around z axis
-    let sin_angle = rad.sin();
-    let cos_angle = rad.cos();
     let mat = vec! [
-        cos_angle, sin_angle, 0f32, 0f32,
-        -sin_angle, cos_angle, 0f32, 0f32,
+        1f32, 0f32, 0f32, 0f32,
+        0f32, 1f32, 0f32, 0f32,
         0f32, 0f32, 1f32, 0f32,
         0f32, 0f32, 0f32, 1f32
     ];
-    gles::uniform_matrix4fv(model_mat_location, 1, false, mat.as_ptr());
+    gles::uniform_matrix4fv(model_mat_location, 1, true, mat.as_ptr());
 }
+
+// fn set_rotation_matrix(rad: f32, model_mat_location: u32)
+// {
+//     // rotation around z axis
+//     let sin_angle = rad.sin();
+//     let cos_angle = rad.cos();
+//     let mat = vec! [
+//         cos_angle, sin_angle, 0f32, 0f32,
+//         -sin_angle, cos_angle, 0f32, 0f32,
+//         0f32, 0f32, 1f32, 0f32,
+//         0f32, 0f32, 0f32, 1f32
+//     ];
+//     gles::uniform_matrix4fv(model_mat_location, 1, false, mat.as_ptr());
+// }
 
 fn resize(width: i32, height: i32, visual: &Visual)
 {
@@ -138,12 +153,12 @@ fn resize(width: i32, height: i32, visual: &Visual)
 
 fn set_ortho_matrix(_left: f32, _right: f32, _bottom: f32, _top: f32, _n: f32, _f: f32, proj_mat_location: u32) {
     let mat = vec! [
-        1f32, 0f32, 0f32, 0f32,
-        0f32, 1f32, 0f32, 0f32,
+        1f32, 0f32, 0f32, 100f32/ 1080f32,
+        0f32, 1f32, 0f32, 100f32 / 1920f32,
         0f32, 0f32, 1f32, 0f32,
         0f32, 0f32, 0f32, 1f32
     ];
-    gles::uniform_matrix4fv(proj_mat_location, 1, false, mat.as_ptr());
+    gles::uniform_matrix4fv(proj_mat_location, 1, true, mat.as_ptr());
 }
 
 

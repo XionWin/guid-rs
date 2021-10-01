@@ -1,5 +1,6 @@
 pub struct Visual {
     id: u32,
+    shape_type: crate::def::ShapeType,
     visual_type: crate::def::VisualType,
     len: usize,
     vertex_id: u32,
@@ -9,9 +10,10 @@ pub struct Visual {
 }
 
 impl Visual {
-    pub fn new(id: u32, visual_type: crate::def::VisualType, len: usize, vertex_id: u32, color_id: u32, proj_mat_id: u32, model_mat_id: u32) -> Self {
+    pub fn new(id: u32, shape_type: crate::def::ShapeType, visual_type: crate::def::VisualType, len: usize, vertex_id: u32, color_id: u32, proj_mat_id: u32, model_mat_id: u32) -> Self {
         Self {
             id, 
+            shape_type,
             visual_type,
             len,
             vertex_id,
@@ -22,6 +24,10 @@ impl Visual {
     }
     pub fn get_id(&self) -> u32 {
         self.id
+    }
+
+    pub fn get_shape_type(&self) -> crate::def::ShapeType {
+        self.shape_type
     }
 
     pub fn get_visual_type(&self) -> crate::def::VisualType {

@@ -70,5 +70,5 @@ fn build_shape(program: &GfxProgram, shape: Shape) -> Visual {
     let proj_mat = gles::get_uniform_location(program.get_id(), "proj_mat");
     let model_mat = gles::get_uniform_location(program.get_id(), "model_mat");
     
-    Visual::new(vao, shape.get_visual_type(), shape.get_len(), pos_idx, clr_idx, proj_mat, model_mat)
+    Visual::new(vao, shape.get_shape_type(), shape.get_visual_type(), shape.get_len(), pos_idx, clr_idx, proj_mat, model_mat)
 }

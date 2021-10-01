@@ -26,6 +26,6 @@ impl Into<super::Shape> for Elipse {
             let y = self.r2 as f32 * (i as f32).sin() + self.cy as f32;
             vertexes.push(super::Vertex::new(x / 1080f32 * 2f32, y / 1920f32 * 2f32, self.color.0, self.color.1, self.color.2, 1f32));
         }
-        super::Shape::new(crate::def::VisualType::TriangleFan, vertexes)
+        super::Shape::new(crate::def::ShapeType::Elipse, crate::def::VisualType::TriangleFan, vertexes)
     }
 }
