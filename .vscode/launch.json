@@ -13,7 +13,7 @@
             "cwd": "${workspaceRoot}/target/arm-unknown-linux-gnueabihf/debug/",
             "MIMode": "gdb",
             "preLaunchTask": "cross compile",
-            "miDebuggerPath": "/usr/bin/arm-none-eabi-gdb",
+            "miDebuggerPath": "/usr/bin/gdb-multiarch",
             "miDebuggerServerAddress": "192.168.0.205:12345",
         }
     ]
